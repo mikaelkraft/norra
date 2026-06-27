@@ -30,9 +30,6 @@
     </nav>
 
     <header>
-        <div class="hero-image">
-            <img src="analysis_hero.png" alt="Norra AI Analysis Graphics" class="brand-hero">
-        </div>
         <h1>Global Prediction <span>Beacon</span></h1>
         <p>Near-perfect mathematical forecasts for football fans worldwide. Powered by the Beacon Force Algorithm.</p>
         <div class="last-sync">System Last Synced: <span id="last-updated">...</span></div>
@@ -57,8 +54,55 @@
         </div>
     </section>
 
+    <!-- Cookie Notice Banner -->
+    <div id="cookie-banner" class="cookie-banner">
+        <span>🍪 Norra AI uses cookies to optimize your performance and analytical tracking. By using our site, you agree to our Terms.</span>
+        <button onclick="acceptCookies()" class="cookie-btn">Accept</button>
+    </div>
+
+    <!-- Modals for Terms & Privacy -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('terms-modal')">&times;</span>
+            <h2>Terms of Service</h2>
+            <p>Welcome to Norra AI. By accessing our website and predictions, you agree to these Terms. All forecasts are generated using advanced mathematical models and are intended for entertainment purposes only.</p>
+            <p>We do not guarantee the accuracy of any prediction. Sports betting carries financial risk. Please bet responsibly.</p>
+        </div>
+    </div>
+
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('privacy-modal')">&times;</span>
+            <h2>Privacy Policy</h2>
+            <p>We value your privacy. Norra AI does not collect personal identity information from general visitors. We use local caching cookies to store your theme preferences and interface configurations.</p>
+            <p>Any connection stats or logs are kept strictly internal and are never shared with third-party advertisers.</p>
+        </div>
+    </div>
+
+    <!-- Floating Chatbot UI -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-icon" onclick="toggleChat()">
+            💬
+        </div>
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">
+                <span>🤖 Norra AI Assistant</span>
+                <span class="chat-close" onclick="toggleChat()">&times;</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-msg">Hello! I am your Norra AI Assistant. Ask me anything about our predictions, stats, or supported leagues!</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a question..." onkeydown="handleChatKey(event)">
+                <button onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. All rights mathematical.</p>
+        <p class="gamble-warning">🔞 18+ | Play Responsibly | <a href="https://www.begambleaware.org" target="_blank" rel="noopener">BeGambleAware.org</a></p>
+        <p class="legal-disclaimer">Disclaimer: Norra AI provides mathematical estimations. Sports betting involves financial risk. We accept no liability for losses.</p>
+        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. <a href="javascript:void(0)" onclick="openModal('terms-modal')">Terms</a> | <a href="javascript:void(0)" onclick="openModal('privacy-modal')">Privacy</a>. All rights mathematical.</p>
     </footer>
 
     <script src="app.js"></script>

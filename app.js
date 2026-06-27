@@ -200,11 +200,93 @@ function setDynamicYear() {
     }
 }
 
+// --- Modal Handlers ---
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('active');
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('active');
+}
+
+// Close modal when clicking outside of modal-content
+window.addEventListener('click', (event) => {
+    if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('active');
+    }
+});
+
+// --- Cookie Banner Handlers ---
+function checkCookies() {
+    const banner = document.getElementById('cookie-banner');
+    if (banner && !localStorage.getItem('cookies-accepted')) {
+        banner.classList.remove('hidden');
+    } else if (banner) {
+        banner.classList.add('hidden');
+    }
+}
+
+function acceptCookies() {
+    localStorage.setItem('cookies-accepted', 'true');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.add('hidden');
+}
+
+// --- Chatbot Handlers ---
+function toggleChat() {
+    const win = document.getElementById('chat-window');
+    if (win) win.classList.toggle('active');
+}
+
+function handleChatKey(event) {
+    if (event.key === 'Enter') {
+        sendChatMessage();
+    }
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const messages = document.getElementById('chat-messages');
+    if (!input || !messages || !input.value.trim()) return;
+
+    const query = input.value.trim();
+    input.value = '';
+
+    // Append User Message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user-msg';
+    userMsg.textContent = query;
+    messages.appendChild(userMsg);
+    messages.scrollTop = messages.scrollHeight;
+
+    // Append Bot Loading Message
+    const botLoading = document.createElement('div');
+    botLoading.className = 'message bot-msg';
+    botLoading.textContent = 'Thinking...';
+    messages.appendChild(botLoading);
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/chat?message=${encodeURIComponent(query)}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        botLoading.textContent = data.response || 'Sorry, I am offline right now.';
+    } catch (err) {
+        console.error('Chat error:', err);
+        botLoading.textContent = 'Connection error. Please try again later.';
+    }
+    messages.scrollTop = messages.scrollHeight;
+}
+
 // Fetch on load
 document.addEventListener('DOMContentLoaded', () => {
     fetchPredictions();
     fetchTimeline();
     setDynamicYear();
+    checkCookies();
 });
 
 // Refresh every 5 minutes
