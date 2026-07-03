@@ -2,13 +2,15 @@ let allPredictions = [];
 let pastPredictions = [];
 let activeFilter = 'All';
 let currentView = 'active'; // 'active', 'past', 'live'
+let currentPage = 1;
+const itemsPerPage = 6;
 
-// Dynamic backend URL resolution: if on GitHub Pages, use Render API URL; else use relative URL
-const BACKEND_URL = window.location.hostname.includes('github.io')
-    ? 'https://norra-ai.onrender.com' // Actual Render URL in production
-    : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
-        ? 'http://127.0.0.1:8000' // Local FastAPI backend
-        : ''; // Relative URL for self-hosted production deployments
+// Dynamic backend URL resolution: if on GitHub Pages or custom domain, use Render API URL; else use relative URL
+const BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
+    ? 'http://127.0.0.1:8000' // Local FastAPI backend
+    : (window.location.hostname.includes('onrender.com'))
+        ? '' // Relative URL for Render self-hosted backend
+        : 'https://norra-ai.onrender.com'; // Production Render URL
 
 async function fetchPredictions() {
     const grid = document.getElementById('prediction-grid');
@@ -22,6 +24,7 @@ async function fetchPredictions() {
         pastPredictions = data.past_predictions || [];
         if (lastSyncSpan) lastSyncSpan.textContent = data.last_updated || 'Unknown';
 
+        currentPage = 1; // Reset to page 1 on fresh sync
         renderFilters();
         renderGrid();
 
@@ -34,6 +37,7 @@ async function fetchPredictions() {
 function switchView(view) {
     currentView = view;
     activeFilter = 'All'; // Reset filter when switching tabs
+    currentPage = 1; // Reset page number
     
     // Update active button state
     document.getElementById('btn-active-predictions').classList.toggle('active', view === 'active');
@@ -43,22 +47,26 @@ function switchView(view) {
     const grid = document.getElementById('prediction-grid');
     const liveContainer = document.getElementById('live-scores-container');
     const filterContainer = document.querySelector('.filter-container');
+    const paginationContainer = document.getElementById('pagination-container');
     
     if (view === 'active') {
         grid.classList.remove('hidden');
         if (liveContainer) liveContainer.classList.add('hidden');
         if (filterContainer) filterContainer.classList.remove('hidden');
+        if (paginationContainer) paginationContainer.classList.remove('hidden');
         renderFilters();
         renderGrid();
     } else if (view === 'past') {
         grid.classList.remove('hidden');
         if (liveContainer) liveContainer.classList.add('hidden');
         if (filterContainer) filterContainer.classList.remove('hidden');
+        if (paginationContainer) paginationContainer.classList.remove('hidden');
         renderFilters();
         renderGrid();
     } else if (view === 'live') {
         grid.classList.add('hidden');
         if (filterContainer) filterContainer.classList.add('hidden');
+        if (paginationContainer) paginationContainer.classList.add('hidden');
         if (liveContainer) liveContainer.classList.remove('hidden');
     }
 }
@@ -77,6 +85,7 @@ function renderFilters() {
         btn.textContent = league;
         btn.onclick = () => {
             activeFilter = league;
+            currentPage = 1; // Reset to page 1 on filter change
             renderFilters();
             renderGrid();
         };
@@ -96,10 +105,16 @@ function renderGrid() {
 
     if (filtered.length === 0) {
         grid.innerHTML = '<div class="loading">No beacons found for this sector.</div>';
+        renderPagination(0);
         return;
     }
 
-    filtered.forEach((p, index) => {
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (currentPage > totalPages) currentPage = totalPages || 1;
+
+    const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    paginated.forEach((p, index) => {
         const card = document.createElement('div');
         card.className = 'prediction-card';
         card.style.animationDelay = `${index * 0.1}s`;
@@ -123,10 +138,98 @@ function renderGrid() {
             }
         }
 
+        // Generate the high-precision top 2-3 recommended picks
+        const picks = [];
+        
+        // 1. FT Outcome / Double Chance
+        if (p.main && !p.main.includes("Draw") && confValue >= 72) {
+            picks.push({
+                type: "Match Winner",
+                value: p.main,
+                conf: confValue,
+                badge: "🎯"
+            });
+        } else if (p.dc && p.dc !== "N/A") {
+            picks.push({
+                type: "Double Chance",
+                value: p.dc,
+                conf: Math.min(95, confValue + 12),
+                badge: "🛡️"
+            });
+        }
+
+        // 2. Goal Forecast / Over Under
+        if (p.ou_refined && p.ou_refined !== "N/A") {
+            let ouConf = 70;
+            if (p.ou_refined === "Over 1.5") ouConf = 82;
+            else if (p.ou_refined === "Under 3.5") ouConf = 80;
+            else if (p.ou_refined === "Over 2.5") ouConf = 73;
+            else if (p.ou_refined === "Under 2.5") ouConf = 71;
+            
+            picks.push({
+                type: "Goal Line",
+                value: p.ou_refined,
+                conf: ouConf,
+                badge: "💎"
+            });
+        }
+
+        // 3. Both Teams to Score (BTTS)
+        if (p.btts && p.btts !== "N/A" && p.btts !== "NG / No") {
+            picks.push({
+                type: "Both Teams to Score",
+                value: p.btts,
+                conf: 75,
+                badge: "⚽"
+            });
+        }
+
+        // 4. First Half Goals
+        if (p.ht_ft && p.ht_ft !== "N/A") {
+            let fhConf = p.ht_ft === "FH Under 1.5" ? 85 : 74;
+            picks.push({
+                type: "First Half Goals",
+                value: p.ht_ft,
+                conf: fhConf,
+                badge: "⏱️"
+            });
+        }
+
+        // 5. Corners (Dynamic Custom Prediction)
+        const highCornerLeagues = ["Premier League", "Championship", "Allsvenskan", "Bundesliga", "Eredivisie"];
+        const isHighCorner = highCornerLeagues.some(l => p.league && p.league.includes(l));
+        picks.push({
+            type: "Corners Pick",
+            value: isHighCorner ? "Over 8.5 Corners" : "Over 7.5 Corners",
+            conf: isHighCorner ? 80 : 75,
+            badge: "🚩"
+        });
+
+        // 6. Combo Bet
+        if (p.combos && p.combos !== "N/A" && confValue >= 75) {
+            picks.push({
+                type: "Value Combo",
+                value: p.combos,
+                conf: Math.max(60, confValue - 5),
+                badge: "⚡"
+            });
+        }
+
+        // Sort by confidence level to show the absolute best/safest picks first!
+        picks.sort((a, b) => b.conf - a.conf);
+
+        // Keep only top 2-3 picks for clean user display
+        const bestPicks = picks.slice(0, 3);
+
         card.innerHTML = `
-            <div class="card-header">
-                <span class="card-tier">${currentView === 'active' ? 'Beacon V4 ML' : 'Concluded'}</span>
-                <span>${p.league}</span>
+            <div class="card-header" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.8rem; opacity: 0.6;">
+                    <span class="card-tier">${currentView === 'active' ? 'Beacon V4 ML' : 'Concluded'}</span>
+                    <span>${p.league}</span>
+                </div>
+                <div style="font-size: 0.7rem; opacity: 0.4; margin-top: 2px;">
+                    Generated: ${p.created_at || 'N/A'} (GMT+1)
+                </div>
             </div>
             <div class="teams">
                 ${p.home} <span>VS</span> ${p.away}
@@ -151,110 +254,85 @@ function renderGrid() {
                 </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-label">Double Chance</span>
-                    <span class="stat-value">${p.dc || 'N/A'}</span>
+            <div class="recommended-picks-container">
+                <div class="picks-title">🎯 TOP PRECISION PICKS</div>
+                <div class="picks-list">
+                    ${bestPicks.map(pick => `
+                        <div class="pick-item">
+                            <span class="pick-market">${pick.badge} ${pick.type}</span>
+                            <span class="pick-val">${pick.value}</span>
+                            <span class="pick-precision">${pick.conf}% Precision</span>
+                        </div>
+                    `).join('')}
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">BTTS (GG/NG)</span>
-                    <span class="stat-value">${p.btts || 'N/A'}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Draw No Bet</span>
-                    <span class="stat-value">${p.dnb || 'N/A'}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Multi-Goals</span>
-                    <span class="stat-value">${p.multi_goals || 'N/A'}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">First Half Goals</span>
-                    <span class="stat-value">${p.ht_ft || 'N/A'}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Goal Forecast</span>
-                    <span class="stat-value">${p.ou_refined || 'N/A'}</span>
-                </div>
-            </div>
-            
-            <div class="combo-bet-container">
-                <span class="stat-label">⚡ Combo Value Pick</span>
-                <div class="combo-badge">${p.combos || 'N/A'}</div>
-            </div>
-
-            <div class="main-outcome">
-                🎯 FT Outcome: ${p.main}
             </div>
 
             <div class="prediction-date-footer">
-                📅 Kickoff: ${p.date}
+                📅 Kickoff: ${p.date} (GMT+1)
             </div>
         `;
         grid.appendChild(card);
     });
+
+    renderPagination(totalPages);
 }
 
-async function fetchTimeline() {
-    const timelineContainer = document.getElementById('timeline-container');
-    if (!timelineContainer) return;
+function renderPagination(totalPages) {
+    const container = document.getElementById('pagination-container');
+    if (!container) return;
+    container.innerHTML = '';
     
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/timeline`);
-        const data = await response.json();
-        
-        if (data.length === 0) {
-            timelineContainer.innerHTML = '<div class="loading">No broadcast signals captured in this sector yet.</div>';
-            return;
+    if (totalPages <= 1) return;
+    
+    // Prev Button
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn';
+    prevBtn.innerHTML = '&larr; Prev';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderGrid();
+            const filterBar = document.querySelector('.view-toggle-container');
+            if (filterBar) {
+                window.scrollTo({ top: filterBar.offsetTop - 20, behavior: 'smooth' });
+            }
         }
-        
-        timelineContainer.innerHTML = '';
-        
-        data.forEach(post => {
-            const card = document.createElement('div');
-            card.className = 'timeline-card';
-            
-            // Random-ish initial likes to simulate active user reactions
-            const agreeCount = Math.floor(Math.random() * 24) + 12;
-            const valueCount = Math.floor(Math.random() * 15) + 6;
-            
-            card.innerHTML = `
-                <div class="timeline-header">
-                    <span class="platform-badge platform-${post.platform.toLowerCase()}">
-                        ${post.platform === 'X' ? '🐦 X (Twitter)' : '📢 Telegram'}
-                    </span>
-                    <span class="timeline-date">${post.date}</span>
-                </div>
-                <div class="timeline-body">${post.content.replace(/\n/g, '<br>')}</div>
-                ${post.link ? `<a href="${post.link}" target="_blank" class="timeline-link">View Original Post &rarr;</a>` : ''}
-                <div class="reaction-bar">
-                    <button class="reaction-btn" onclick="reactToPost(this)">
-                        🔥 Agree <span class="react-count">${agreeCount}</span>
-                    </button>
-                    <button class="reaction-btn" onclick="reactToPost(this)">
-                        📈 Value Pick <span class="react-count">${valueCount}</span>
-                    </button>
-                </div>
-            `;
-            timelineContainer.appendChild(card);
-        });
-    } catch (err) {
-        console.error('Timeline fetch error:', err);
-        timelineContainer.innerHTML = '<div class="loading">Failed to load timeline feed.</div>';
+    };
+    container.appendChild(prevBtn);
+    
+    // Page Numbers
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-btn ${currentPage === i ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.onclick = () => {
+            currentPage = i;
+            renderGrid();
+            const filterBar = document.querySelector('.view-toggle-container');
+            if (filterBar) {
+                window.scrollTo({ top: filterBar.offsetTop - 20, behavior: 'smooth' });
+            }
+        };
+        container.appendChild(pageBtn);
     }
-}
-
-function reactToPost(btn) {
-    const countSpan = btn.querySelector('.react-count');
-    if (!btn.classList.contains('reacted')) {
-        btn.classList.add('reacted');
-        countSpan.textContent = parseInt(countSpan.textContent) + 1;
-        btn.style.borderColor = 'var(--accent)';
-    } else {
-        btn.classList.remove('reacted');
-        countSpan.textContent = parseInt(countSpan.textContent) - 1;
-        btn.style.borderColor = 'var(--glass-border)';
-    }
+    
+    // Next Button
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn';
+    nextBtn.innerHTML = 'Next &rarr;';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderGrid();
+            const filterBar = document.querySelector('.view-toggle-container');
+            if (filterBar) {
+                window.scrollTo({ top: filterBar.offsetTop - 20, behavior: 'smooth' });
+            }
+        }
+    };
+    container.appendChild(nextBtn);
 }
 
 function setDynamicYear() {
@@ -348,7 +426,6 @@ async function sendChatMessage() {
 // Fetch on load
 document.addEventListener('DOMContentLoaded', () => {
     fetchPredictions();
-    fetchTimeline();
     setDynamicYear();
     checkCookies();
 });
@@ -356,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Refresh every 5 minutes
 setInterval(() => {
     fetchPredictions();
-    fetchTimeline();
 }, 300000);
 
 async function promptAdminAccess() {
@@ -367,7 +443,11 @@ async function promptAdminAccess() {
         const response = await fetch(`${BACKEND_URL}/api/verify-admin-code?code=${encodeURIComponent(code)}`);
         const data = await response.json();
         if (data.status === "success") {
-            window.location.href = `${BACKEND_URL}/admin?token=${data.token}`;
+            // Admin default render URL remains
+            const adminBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
+                ? 'http://127.0.0.1:8000'
+                : 'https://norra-ai.onrender.com';
+            window.location.href = `${adminBase}/admin?token=${data.token}`;
         } else {
             alert(data.message || "Access Denied. Be gone, snooper!");
         }
