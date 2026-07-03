@@ -1,10 +1,14 @@
 let allPredictions = [];
+let pastPredictions = [];
 let activeFilter = 'All';
+let currentView = 'active'; // 'active', 'past', 'live'
 
 // Dynamic backend URL resolution: if on GitHub Pages, use Render API URL; else use relative URL
 const BACKEND_URL = window.location.hostname.includes('github.io')
-    ? 'https://norra-ai.onrender.com' // ctual Render URL in production
-    : ''; // Relative URL for local development or self-hosted deployment
+    ? 'https://norra-ai.onrender.com' // Actual Render URL in production
+    : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
+        ? 'http://127.0.0.1:8000' // Local FastAPI backend
+        : ''; // Relative URL for self-hosted production deployments
 
 async function fetchPredictions() {
     const grid = document.getElementById('prediction-grid');
@@ -14,7 +18,8 @@ async function fetchPredictions() {
         const response = await fetch(`${BACKEND_URL}/predictions`);
         const data = await response.json();
         
-        allPredictions = data.predictions || [];
+        allPredictions = data.active_predictions || data.predictions || [];
+        pastPredictions = data.past_predictions || [];
         if (lastSyncSpan) lastSyncSpan.textContent = data.last_updated || 'Unknown';
 
         renderFilters();
@@ -26,11 +31,44 @@ async function fetchPredictions() {
     }
 }
 
+function switchView(view) {
+    currentView = view;
+    activeFilter = 'All'; // Reset filter when switching tabs
+    
+    // Update active button state
+    document.getElementById('btn-active-predictions').classList.toggle('active', view === 'active');
+    document.getElementById('btn-past-predictions').classList.toggle('active', view === 'past');
+    document.getElementById('btn-live-scores').classList.toggle('active', view === 'live');
+    
+    const grid = document.getElementById('prediction-grid');
+    const liveContainer = document.getElementById('live-scores-container');
+    const filterContainer = document.querySelector('.filter-container');
+    
+    if (view === 'active') {
+        grid.classList.remove('hidden');
+        if (liveContainer) liveContainer.classList.add('hidden');
+        if (filterContainer) filterContainer.classList.remove('hidden');
+        renderFilters();
+        renderGrid();
+    } else if (view === 'past') {
+        grid.classList.remove('hidden');
+        if (liveContainer) liveContainer.classList.add('hidden');
+        if (filterContainer) filterContainer.classList.remove('hidden');
+        renderFilters();
+        renderGrid();
+    } else if (view === 'live') {
+        grid.classList.add('hidden');
+        if (filterContainer) filterContainer.classList.add('hidden');
+        if (liveContainer) liveContainer.classList.remove('hidden');
+    }
+}
+
 function renderFilters() {
     const filterBar = document.getElementById('league-filters');
     if (!filterBar) return;
 
-    const leagues = ['All', ...new Set(allPredictions.map(p => p.league))];
+    const visiblePredictions = currentView === 'active' ? allPredictions : pastPredictions;
+    const leagues = ['All', ...new Set(visiblePredictions.map(p => p.league))];
     filterBar.innerHTML = '';
     
     leagues.forEach(league => {
@@ -50,12 +88,14 @@ function renderGrid() {
     const grid = document.getElementById('prediction-grid');
     grid.innerHTML = '';
 
+    const visiblePredictions = currentView === 'active' ? allPredictions : pastPredictions;
+
     const filtered = activeFilter === 'All' 
-        ? allPredictions 
-        : allPredictions.filter(p => p.league === activeFilter);
+        ? visiblePredictions 
+        : visiblePredictions.filter(p => p.league === activeFilter);
 
     if (filtered.length === 0) {
-        grid.innerHTML = '<div class="loading">No active beacons for this sector.</div>';
+        grid.innerHTML = '<div class="loading">No beacons found for this sector.</div>';
         return;
     }
 
@@ -66,14 +106,34 @@ function renderGrid() {
         
         const confValue = parseInt(p.conf) || 50;
 
+        let statusBadgeHtml = '';
+        let scoreHtml = '';
+        
+        if (currentView === 'past') {
+            const statusClass = p.status === 'won' ? 'status-won' : (p.status === 'lost' ? 'status-lost' : 'status-pending');
+            const statusText = p.status === 'won' ? '✅ Won' : (p.status === 'lost' ? '❌ Lost' : '⏳ Concluded');
+            statusBadgeHtml = `<span class="past-status-badge ${statusClass}">${statusText}</span>`;
+            
+            if (p.actual_home_goals !== null && p.actual_away_goals !== null) {
+                scoreHtml = `
+                    <div class="final-score-badge">
+                        ⚽ Final Score: <strong>${p.actual_home_goals} - ${p.actual_away_goals}</strong>
+                    </div>
+                `;
+            }
+        }
+
         card.innerHTML = `
             <div class="card-header">
-                <span class="card-tier">Beacon V4 ML</span>
+                <span class="card-tier">${currentView === 'active' ? 'Beacon V4 ML' : 'Concluded'}</span>
                 <span>${p.league}</span>
             </div>
             <div class="teams">
                 ${p.home} <span>VS</span> ${p.away}
             </div>
+
+            ${statusBadgeHtml}
+            ${scoreHtml}
 
             ${p.league_avg_goals ? `
             <div class="avg-goals-badge">
@@ -109,7 +169,7 @@ function renderGrid() {
                     <span class="stat-value">${p.multi_goals || 'N/A'}</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">HT/FT Market</span>
+                    <span class="stat-label">First Half Goals</span>
                     <span class="stat-value">${p.ht_ft || 'N/A'}</span>
                 </div>
                 <div class="stat-item">
@@ -125,6 +185,10 @@ function renderGrid() {
 
             <div class="main-outcome">
                 🎯 FT Outcome: ${p.main}
+            </div>
+
+            <div class="prediction-date-footer">
+                📅 Kickoff: ${p.date}
             </div>
         `;
         grid.appendChild(card);
@@ -294,3 +358,21 @@ setInterval(() => {
     fetchPredictions();
     fetchTimeline();
 }, 300000);
+
+async function promptAdminAccess() {
+    const code = prompt("Enter the Admin Access Code:");
+    if (!code) return;
+    
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/verify-admin-code?code=${encodeURIComponent(code)}`);
+        const data = await response.json();
+        if (data.status === "success") {
+            window.location.href = `${BACKEND_URL}/admin?token=${data.token}`;
+        } else {
+            alert(data.message || "Access Denied. Be gone, snooper!");
+        }
+    } catch (err) {
+        console.error("Access check failed:", err);
+        alert("A system error occurred. Access Denied.");
+    }
+}
