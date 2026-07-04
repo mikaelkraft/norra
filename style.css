@@ -1126,4 +1126,17 @@ footer a:hover {
     font-weight: 600;
 }
 
+/* CSS for best-pick highlight */
+.best-pick {
+    border: 2px solid #FFD700 !important;
+    background: rgba(255, 215, 0, 0.08) !important;
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.15);
+    border-radius: 10px;
+    padding: 12px !important;
+    margin-bottom: 10px;
+}
+.best-pick .pick-val {
+    color: #FFD700;
+    font-weight: 700;
+}
 
