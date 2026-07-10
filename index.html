@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Norra AI | The Prediction Beacon Force</title>
     <link rel="icon" type="image/png" href="norraai.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0b10">
+    <link rel="apple-touch-icon" href="norraai.png">
     
     <!-- Open Graph / social sharing meta tags -->
     <meta property="og:title" content="Norra AI | The Prediction Beacon Force">
@@ -39,9 +42,14 @@
     </header>
 
     <div class="view-toggle-container">
-        <button id="btn-active-predictions" class="toggle-btn active" onclick="switchView('active')">📡 Active</button>
-        <button id="btn-past-predictions" class="toggle-btn" onclick="switchView('past')">📜 Concluded</button>
+        <button id="btn-yesterday-predictions" class="toggle-btn" onclick="switchView('yesterday')">📅 Yesterday</button>
+        <button id="btn-active-predictions" class="toggle-btn active" onclick="switchView('active')">📡 Today</button>
         <button id="btn-live-scores" class="toggle-btn" onclick="switchView('live')">⚽ Livescore</button>
+    </div>
+
+    <div id="yesterday-sub-toggle" class="sub-toggle-container hidden">
+        <button id="btn-sub-yesterday" class="sub-toggle-btn active" onclick="switchYesterdaySubView('yesterday')">📅 Yesterday's Picks</button>
+        <button id="btn-sub-archive" class="sub-toggle-btn" onclick="switchYesterdaySubView('archive')">📜 Older Archive</button>
     </div>
 
     <div class="filter-container">
@@ -56,7 +64,7 @@
             <p>Live scores, match statistics, and timeline events provided by ScoreBat.</p>
         </div>
         <div class="iframe-wrapper">
-            <iframe src="https://www.scorebat.com/embed/livescore/" frameborder="0" width="100%" height="760" allowfullscreen allow="autoplay; fullscreen" style="width: 100%; height: 760px; border: none; border-radius: 16px; background: rgba(15, 23, 42, 0.5); overflow: hidden; display: block;" class="_scorebatEmbeddedWidget_"></iframe>
+            <iframe src="https://www.scorebat.com/embed/livescore/" title="ScoreBat Livescore Widget" allowfullscreen allow="autoplay; fullscreen" class="livescore-iframe _scorebatEmbeddedWidget_"></iframe>
             <script>(function(d, s, id) {
               var js, fjs = d.getElementsByTagName(s)[0];
               if (d.getElementById(id)) return;

@@ -157,9 +157,11 @@ main {
     border: 1px solid var(--glass-border);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    padding: 2rem;
-    border-radius: 20px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    padding: 1.25rem;
+    border-radius: 16px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+    animation: cardEntrance 0.6s ease forwards;
+    opacity: 0;
 }
 
 .prediction-card:hover {
@@ -175,13 +177,12 @@ main {
     padding-bottom: 1rem;
     margin-bottom: 1rem;
     font-size: 0.8rem;
-    opacity: 0.6;
 }
 
 .teams {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.8rem;
 }
 
 .teams span { color: var(--accent); margin: 0 0.5rem; }
@@ -257,17 +258,7 @@ main {
     box-shadow: 0 0 15px var(--accent-glow);
 }
 
-.prediction-card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    padding: 2rem;
-    border-radius: 24px;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
-    animation: cardEntrance 0.6s ease forwards;
-    opacity: 0;
-}
+/* Consolidated into primary selector */
 
 @keyframes cardEntrance {
     from { opacity: 0; transform: translateY(20px); }
@@ -544,6 +535,10 @@ footer span {
     }
     header h1 { font-size: 2.2rem; }
     nav { padding: 1.5rem 5%; }
+    .admin-btn {
+        padding: 0.75rem 1.25rem; /* Larger mobile touch target area */
+        font-size: 0.85rem;
+    }
     main { padding: 1rem 5%; }
     .view-toggle-container {
         gap: 0.8rem;
@@ -589,17 +584,22 @@ footer span {
     }
     .view-toggle-container {
         display: flex;
-        justify-content: center;
-        gap: 0.4rem;
+        justify-content: flex-start;
+        gap: 0.5rem;
         margin: 1rem 0 1.5rem;
-        padding: 0 10px;
+        padding: 0 15px;
         flex-wrap: nowrap;
         width: 100%;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+    }
+    .view-toggle-container::-webkit-scrollbar {
+        display: none;
     }
     .toggle-btn {
-        flex: 1;
-        padding: 0.6rem 0.2rem;
-        font-size: 0.75rem;
+        flex: 0 0 auto;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.78rem;
         border-radius: 20px;
         text-align: center;
         letter-spacing: 0px;
@@ -909,20 +909,43 @@ footer a:hover {
     background: var(--glass);
     border: 1px solid var(--glass-border);
     color: var(--text);
-    padding: 0.8rem 1.8rem;
+    padding: 0.5rem 1.2rem;
     border-radius: 30px;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-family: 'Orbitron', sans-serif;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 .toggle-btn.active, .toggle-btn:hover {
     background: var(--accent);
     color: var(--bg-dark);
     border-color: var(--accent);
     box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.value-bet-badge {
+    background: rgba(255, 107, 0, 0.15);
+    color: #ff6b00;
+    border: 1px solid rgba(255, 107, 0, 0.3);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 0 8px rgba(255, 107, 0, 0.1);
+    display: inline-block;
+    vertical-align: middle;
+}
+.stake-label {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+.stake-label strong {
+    color: var(--accent);
 }
 
 /* --- Live Scores Widget --- */
@@ -955,6 +978,11 @@ footer a:hover {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
     border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.status-void {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.3);
 }
 .status-pending {
     background: rgba(234, 179, 8, 0.15);
@@ -1014,6 +1042,15 @@ footer a:hover {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 242, 255, 0.05);
     border: 1px solid var(--glass-border);
 }
+.livescore-iframe {
+    width: 100%;
+    height: 760px;
+    border: none;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.5);
+    overflow: hidden;
+    display: block;
+}
 
 /* --- Pagination Style --- */
 .pagination-container {
@@ -1056,6 +1093,23 @@ footer a:hover {
 }
 
 @media (max-width: 480px) {
+    .view-toggle-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 0 10px;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    .view-toggle-container::-webkit-scrollbar {
+        display: none;
+    }
+    .toggle-btn {
+        flex: 0 0 auto;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.2px;
+    }
     .pagination-container {
         padding: 0 10px;
         gap: 0.3rem;
@@ -1138,5 +1192,33 @@ footer a:hover {
 .best-pick .pick-val {
     color: #FFD700;
     font-weight: 700;
+}
+
+/* --- Yesterday Nested Sub-Toggle --- */
+.sub-toggle-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: -0.5rem 0 1rem;
+    padding: 0 10%;
+    width: 100%;
+}
+.sub-toggle-btn {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-dim);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+}
+.sub-toggle-btn.active, .sub-toggle-btn:hover {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--accent);
+    border-color: rgba(0, 242, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.15);
 }
 
