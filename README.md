@@ -6,7 +6,7 @@ Sports prediction and analysis bot
 
 ## 🤖 Private Telegram Bot Administration
 
-You can interact with your Telegram Bot directly in a private message to query statistics or manage your channel broadcasts.
+You can interact with our Telegram Bot **`@NorraAi_bot`** directly in a private message to query statistics or manage your channel broadcasts.
 
 ### Available Commands:
 * **`/start`** / **`/help`**: Returns the welcome greeting.
@@ -14,3 +14,4 @@ You can interact with your Telegram Bot directly in a private message to query s
 * **`/timeline`**: Queries the database for the 5 most recent predictions logged in the Web App timeline, showing their database IDs.
 * **`/repost <id>`**: Fetches the pick corresponding to the given ID from your timeline database and **instantly rebroadcasts it** to your public Telegram channel.
   * *Usage Example:* `/repost 14`
+  * App is not Opensourced yet...
