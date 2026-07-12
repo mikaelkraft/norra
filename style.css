@@ -157,15 +157,15 @@ main {
     border: 1px solid var(--glass-border);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    padding: 1.25rem;
-    border-radius: 16px;
+    padding: 1rem; /* Compact padding */
+    border-radius: 12px; /* Smaller, cleaner radius */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
     animation: cardEntrance 0.6s ease forwards;
     opacity: 0;
 }
 
 .prediction-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px); /* Subtle hover */
     border-color: var(--accent);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
@@ -174,10 +174,9 @@ main {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid var(--glass-border);
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.8rem;
-}
+    padding-bottom: 0.6rem; /* Compact padding */
+    margin-bottom: 0.6rem; /* Compact margin */
+    font-size: 0.75rem; /* Smaller font */
 
 .teams {
     font-size: 1.05rem;
@@ -1001,12 +1000,19 @@ footer a:hover {
     letter-spacing: 0.5px;
 }
 .prediction-date-footer {
-    font-size: 0.7rem;
-    opacity: 0.4;
-    margin-top: 1.2rem;
+    font-size: 0.75rem;
+    opacity: 0.95; /* Brighter opacity */
+    color: #f8fafc; /* Bright white-slate color */
+    margin-top: 0.8rem;
     text-align: right;
     border-top: 1px dashed rgba(255,255,255,0.05);
-    padding-top: 0.8rem;
+    padding-top: 0.6rem;
+}
+
+.toggle-card-btn:hover {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
 }
 
 /* Helper hidden class */

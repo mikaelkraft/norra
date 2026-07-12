@@ -283,16 +283,7 @@ function renderGrid() {
             });
         }
 
-        // 3. Both Teams to Score (BTTS)
-        if (p.btts && p.btts !== "N/A" && p.btts !== "NG / No") {
-            const bttsConf = Math.min(88, 68 + (confValue % 15) + (p.home.length % 5));
-            picks.push({
-                type: "Both Teams to Score",
-                value: p.btts,
-                conf: bttsConf,
-                badge: "⚽"
-            });
-        }
+        // 3. Both Teams to Score (BTTS) removed as requested due to risk profile
 
         // 4. First Half Goals
         if (p.ht_ft && p.ht_ft !== "N/A") {
@@ -339,66 +330,74 @@ function renderGrid() {
 
         const dates = getGMTPlus1DateStrings();
         card.innerHTML = `
-            <div class="card-header" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem; margin-bottom: 1rem;">
-                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.8rem; opacity: 0.95;">
+            <div class="card-header" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.6rem; margin-bottom: 0.6rem;">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.75rem; opacity: 0.95;">
                     <div>
                         <span class="card-tier">${p.status === 'pending' ? 'Beacon V4 ML' : (p.date.startsWith(dates.yesterday) ? 'Yesterday' : 'Archive')}</span>
                         ${isValueBet ? '<span class="value-bet-badge">🔥 Value Pick</span>' : ''}
                     </div>
                     <span>${p.league}</span>
                 </div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 2px;">
+                <div style="font-size: 0.65rem; opacity: 0.7; margin-top: 2px;">
                     Generated: ${p.created_at || 'N/A'} (GMT+1)
                 </div>
             </div>
-            <div class="teams">
-                ${p.home} <span>VS</span> ${p.away}
+            <div class="teams" style="font-size: 1.15rem; margin-bottom: 0.4rem;">
+                ${p.home} <span style="font-size: 0.9rem; opacity: 0.6;">VS</span> ${p.away}
             </div>
 
             ${statusBadgeHtml}
             ${scoreHtml}
 
-            ${p.league_avg_goals ? `
-            <div class="avg-goals-badge">
-                📊 League Avg: <strong>${p.league_avg_goals} goals/game</strong>
+            <div class="main-outcome" style="margin: 0.6rem 0; font-size: 0.95rem; font-weight: 600;">
+                🎯 Verdict: <strong style="color: var(--accent);">${p.main}</strong>
             </div>
-            ` : ''}
 
-            <div class="confidence-gauge-container">
-                <div class="gauge-label">
-                    <span>Precision (${p.conf})</span>
-                    <span class="stake-label">Stake: <strong>${stakeAdvice}</strong></span>
+            <!-- Toggle Details Button -->
+            <button class="toggle-card-btn" onclick="toggleCardDetails(${p.fixture_id}, this)" style="width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; margin-top: 0.4rem; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                <span>Show Details</span> <span class="arrow-icon">▼</span>
+            </button>
+
+            <!-- Collapsible Details Container -->
+            <div class="card-details collapsed" id="details-${p.fixture_id}" style="display: none; margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
+                ${p.league_avg_goals ? `
+                <div class="avg-goals-badge" style="margin-bottom: 0.6rem; font-size: 0.75rem;">
+                    📊 League Avg: <strong>${p.league_avg_goals} goals/game</strong>
                 </div>
-                <div class="gauge-track">
-                    <div class="gauge-fill" style="width: ${confValue}%"></div>
+                ` : ''}
+
+                <div class="confidence-gauge-container" style="margin-bottom: 0.8rem;">
+                    <div class="gauge-label" style="font-size: 0.75rem; margin-bottom: 4px;">
+                        <span>Precision (${p.conf})</span>
+                        <span class="stake-label">Stake: <strong>${stakeAdvice}</strong></span>
+                    </div>
+                    <div class="gauge-track" style="height: 6px;">
+                        <div class="gauge-fill" style="width: ${confValue}%"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="recommended-picks-container">
-                <div class="picks-title">🎯 TOP PRECISION PICKS</div>
-                <div class="picks-list">
-                    ${bestPicks.map((pick, idx) => `
-                        <div class="pick-item ${idx === 0 ? 'best-pick' : ''}">
-                            <span class="pick-market">${pick.badge} ${pick.type}</span>
-                            <span class="pick-val">${pick.value}</span>
-                            <span class="pick-precision">${pick.conf}% Precision</span>
-                        </div>
-                    `).join('')}
+                <div class="recommended-picks-container" style="margin-bottom: 0.8rem;">
+                    <div class="picks-title" style="font-size: 0.72rem; letter-spacing: 0.5px; margin-bottom: 0.4rem; opacity: 0.8;">🎯 TOP PRECISION PICKS</div>
+                    <div class="picks-list" style="gap: 6px;">
+                        ${bestPicks.map((pick, idx) => `
+                            <div class="pick-item ${idx === 0 ? 'best-pick' : ''}" style="padding: 6px 10px; font-size: 0.75rem;">
+                                <span class="pick-market">${pick.badge} ${pick.type}</span>
+                                <span class="pick-val" style="font-weight: 700;">${pick.value}</span>
+                                <span class="pick-precision" style="font-size: 0.68rem; opacity: 0.8;">${pick.conf}% Precision</span>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
-            </div>
 
-            <div class="main-outcome" style="margin-top: 1rem; margin-bottom: 0.5rem;">
-                🎯 Verdict: <strong>${p.main}</strong>
-            </div>
+                ${p.explanation && p.explanation !== 'N/A' && p.explanation !== '' ? `
+                <div class="verdict-detail" style="font-size: 0.75rem; line-height: 1.4; opacity: 0.85; margin-bottom: 0.8rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 0.5rem; color: #cbd5e1; font-style: italic;">
+                    💡 <strong>Analysis:</strong> ${p.explanation}
+                </div>
+                ` : ''}
 
-            ${p.explanation && p.explanation !== 'N/A' && p.explanation !== '' ? `
-            <div class="verdict-detail" style="font-size: 0.78rem; line-height: 1.4; opacity: 0.85; margin-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 0.6rem; color: #cbd5e1; font-style: italic;">
-                💡 <strong>Analysis:</strong> ${p.explanation}
-            </div>
-            ` : ''}
-
-            <div class="prediction-date-footer">
-                📅 Kickoff: ${p.date} (GMT+1)
+                <div class="prediction-date-footer" style="margin-top: 0.5rem; font-size: 0.78rem; font-weight: 700; color: #f8fafc; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 0.5rem;">
+                    📅 Kickoff: ${p.date} (GMT+1)
+                </div>
             </div>
         `;
         grid.appendChild(card);
@@ -611,5 +610,23 @@ async function promptAdminAccess() {
     } catch (err) {
         console.error("Access check failed:", err);
         alert("A system error occurred. Access Denied.");
+    }
+}
+
+function toggleCardDetails(fixtureId, button) {
+    const details = document.getElementById(`details-${fixtureId}`);
+    const arrow = button.querySelector('.arrow-icon');
+    const label = button.querySelector('span');
+    
+    if (details.style.display === 'none' || details.style.display === '') {
+        details.style.display = 'block';
+        label.textContent = 'Hide Details';
+        arrow.textContent = '▲';
+        button.style.background = 'rgba(255,255,255,0.08)';
+    } else {
+        details.style.display = 'none';
+        label.textContent = 'Show Details';
+        arrow.textContent = '▼';
+        button.style.background = 'rgba(255,255,255,0.04)';
     }
 }
