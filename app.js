@@ -353,10 +353,15 @@ function renderGrid() {
                 🎯 Verdict: <strong style="color: var(--accent);">${p.main}</strong>
             </div>
 
-            <!-- Toggle Details Button -->
-            <button class="toggle-card-btn" onclick="toggleCardDetails(${p.fixture_id}, this)" style="width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; margin-top: 0.4rem; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
-                <span>Show Details</span> <span class="arrow-icon">▼</span>
-            </button>
+            <!-- Share and Toggle Buttons -->
+            <div style="display: flex; gap: 8px; margin-top: 0.4rem;">
+                <button class="toggle-card-btn" onclick="toggleCardDetails(${p.fixture_id}, this)" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                    <span>Show Details</span> <span class="arrow-icon">▼</span>
+                </button>
+                <button class="share-card-btn" onclick="sharePrediction('${p.home.replace(/'/g, "\\'")}', '${p.away.replace(/'/g, "\\'")}', '${p.main.replace(/'/g, "\\'")}', '${p.conf}', event)" style="background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.25); color: #38bdf8; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                    🔗 <span>Share</span>
+                </button>
+            </div>
 
             <!-- Collapsible Details Container -->
             <div class="card-details collapsed" id="details-${p.fixture_id}" style="display: none; margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
@@ -628,5 +633,33 @@ function toggleCardDetails(fixtureId, button) {
         label.textContent = 'Show Details';
         arrow.textContent = '▼';
         button.style.background = 'rgba(255,255,255,0.04)';
+    }
+}
+
+function sharePrediction(home, away, main, conf, event) {
+    event.stopPropagation();
+    
+    const text = `🏆 NorraAI Pick: ${home} vs ${away}\n🔮 Prediction: ${main} (${conf} Precision)\n🎯 Get real-time high-precision AI football tips at:\n🔗 https://mynorra.xyz`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: `NorraAI Prediction: ${home} vs ${away}`,
+            text: text,
+            url: 'https://mynorra.xyz'
+        }).then(() => {
+            console.log('Successfully shared prediction');
+        }).catch((err) => {
+            console.error('Error sharing:', err);
+        });
+    } else {
+        // Fallback: Copy to clipboard and open Twitter Web Intent
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Prediction copied to clipboard! Opening Twitter...");
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(twitterUrl, '_blank');
+        }).catch((err) => {
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(twitterUrl, '_blank');
+        });
     }
 }
