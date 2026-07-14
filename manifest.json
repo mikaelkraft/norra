@@ -1,0 +1,22 @@
+{
+  "name": "Norra AI Sports Beacon",
+  "short_name": "Norra AI",
+  "description": "High-precision football predictions powered by machine learning.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0a0b10",
+  "theme_color": "#0a0b10",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "norraai.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "norraai.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
