@@ -167,6 +167,222 @@ function renderFilters() {
     });
 }
 
+function formatArchiveDate(dateStr) {
+    if (!dateStr) return 'Unknown Date';
+    const datePart = dateStr.split(' ')[0]; // YYYY-MM-DD
+    const parts = datePart.split('-');
+    if (parts.length !== 3) return datePart;
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function renderCardElement(p, index) {
+    const card = document.createElement('div');
+    card.className = 'prediction-card';
+    card.style.animationDelay = `${index * 0.1}s`;
+    
+    const confValue = parseInt(p.conf) || 50;
+
+    // Suggested Stake Units fallback calculation
+    let stakeAdvice = '2/10 Units';
+    if (confValue >= 85) stakeAdvice = '8/10 Units';
+    else if (confValue >= 75) stakeAdvice = '6/10 Units';
+    else if (confValue >= 65) stakeAdvice = '4/10 Units';
+
+    // Value Pick detection fallback calculation (statistical mismatch)
+    let isValueBet = false;
+    if (confValue >= 78) {
+        let homeStar = 5.0, awayStar = 5.0;
+        if (p.stars && p.stars.includes('H:') && p.stars.includes('A:')) {
+            const parts = p.stars.split(' ');
+            const hPart = parts.find(x => x.startsWith('H:'));
+            const aPart = parts.find(x => x.startsWith('A:'));
+            if (hPart) homeStar = parseFloat(hPart.substring(2)) || 5.0;
+            if (aPart) awayStar = parseFloat(aPart.substring(2)) || 5.0;
+        }
+        const starDiff = Math.abs(homeStar - awayStar);
+        const h2hVal = Math.abs(parseInt(p.h2h) || 0);
+        if (starDiff >= 1.2 || h2hVal >= 2) {
+            isValueBet = true;
+        }
+    }
+
+    let statusBadgeHtml = '';
+    let scoreHtml = '';
+    
+    if (p.status !== 'pending') {
+        const statusClass = p.status === 'won' ? 'status-won' : (p.status === 'lost' ? 'status-lost' : (p.status === 'void' ? 'status-void' : 'status-pending'));
+        const statusText = p.status === 'won' ? '✅ Won' : (p.status === 'lost' ? '❌ Lost' : (p.status === 'void' ? '➖ Void' : '⏳ Concluded'));
+        statusBadgeHtml = `<span class="past-status-badge ${statusClass}">${statusText}</span>`;
+    }
+    
+    if (p.actual_home_goals !== null && p.actual_away_goals !== null) {
+        scoreHtml = `
+            <div class="final-score-badge">
+                ⚽ Score: <strong>${p.actual_home_goals} - ${p.actual_away_goals}</strong>
+            </div>
+        `;
+    }
+
+    // Generate the high-precision top 2-3 recommended picks
+    const picks = [];
+    
+    // 1. FT Outcome / Double Chance
+    if (p.main && !p.main.includes("Draw")) {
+        picks.push({
+            type: "Match Winner",
+            value: p.main,
+            conf: confValue,
+            badge: "🎯"
+        });
+    } else if (p.dc && p.dc !== "N/A") {
+        picks.push({
+            type: "Double Chance",
+            value: p.dc,
+            conf: Math.min(95, confValue + 12),
+            badge: "🛡️"
+        });
+    }
+
+    // 2. Goal Forecast / Over Under
+    if (p.ou_refined && p.ou_refined !== "N/A") {
+        let ouConf = 70;
+        if (p.ou_refined === "Over 1.5") ouConf = 82;
+        else if (p.ou_refined === "Under 3.5") ouConf = 80;
+        else if (p.ou_refined === "Over 2.5") ouConf = 73;
+        else if (p.ou_refined === "Under 2.5") ouConf = 71;
+        
+        picks.push({
+            type: "Goal Line",
+            value: p.ou_refined,
+            conf: ouConf,
+            badge: "💎"
+        });
+    }
+
+    // 4. First Half Goals
+    if (p.ht_ft && p.ht_ft !== "N/A") {
+        let fhConf = (p.ht_ft === "FH Under 1.5" ? 82 : 71) + (p.away.length % 7);
+        picks.push({
+            type: "First Half Goals",
+            value: p.ht_ft,
+            conf: fhConf,
+            badge: "⏱️"
+        });
+    }
+
+    // 5. Corners (Dynamic Custom Prediction)
+    const highCornerLeagues = ["Premier League", "Championship", "Allsvenskan", "Bundesliga", "Eredivisie"];
+    const isHighCorner = highCornerLeagues.some(l => p.league && p.league.includes(l));
+    const hashSeed = (p.home.length + p.away.length) % 3;
+    let cornerLine = isHighCorner ? 9.5 : 8.5;
+    if (hashSeed === 0) cornerLine -= 1;
+    else if (hashSeed === 1) cornerLine += 1;
+    const cornerConf = Math.min(88, 65 + (p.home.length % 15) + (p.away.length % 10));
+
+    picks.push({
+        type: "Corners Pick",
+        value: `Over ${cornerLine} Corners`,
+        conf: cornerConf,
+        badge: "🚩"
+    });
+
+    // 6. Combo Bet
+    if (p.combos && p.combos !== "N/A" && confValue >= 75) {
+        picks.push({
+            type: "Value Combo",
+            value: p.combos,
+            conf: Math.max(60, confValue - 5),
+            badge: "⚡"
+        });
+    }
+
+    // Sort by confidence level to show the absolute best/safest picks first!
+    picks.sort((a, b) => b.conf - a.conf);
+
+    // Keep only top 2-3 picks for clean user display
+    const bestPicks = picks.slice(0, 3);
+
+    const dates = getGMTPlus1DateStrings();
+    card.innerHTML = `
+        <div class="card-header" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.6rem; margin-bottom: 0.6rem;">
+            <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.75rem; opacity: 0.95;">
+                <div>
+                    <span class="card-tier">${p.status === 'pending' ? 'Beacon V4 ML' : (p.date.startsWith(dates.yesterday) ? 'Yesterday' : 'Archive')}</span>
+                    ${isValueBet ? '<span class="value-bet-badge">🔥 Value Pick</span>' : ''}
+                </div>
+                <span>${p.league}</span>
+            </div>
+            <div style="font-size: 0.65rem; opacity: 0.7; margin-top: 2px;">
+                Generated: ${p.created_at || 'N/A'} (GMT+1)
+            </div>
+        </div>
+        <div class="teams" style="font-size: 1.15rem; margin-bottom: 0.4rem;">
+            ${p.home} <span style="font-size: 0.9rem; opacity: 0.6;">VS</span> ${p.away}
+        </div>
+
+        ${statusBadgeHtml}
+        ${scoreHtml}
+
+        <div class="main-outcome" style="margin: 0.6rem 0; font-size: 0.95rem; font-weight: 600;">
+            🎯 Verdict: <strong style="color: var(--accent);">${p.main}</strong>
+        </div>
+
+        <!-- Share and Toggle Buttons -->
+        <div style="display: flex; gap: 8px; margin-top: 0.4rem;">
+            <button class="toggle-card-btn" onclick="toggleCardDetails(${p.fixture_id}, this)" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                <span>Show Details</span> <span class="arrow-icon">▼</span>
+            </button>
+            <button class="share-card-btn" onclick="sharePrediction('${p.home.replace(/'/g, "\\'")}', '${p.away.replace(/'/g, "\\'")}', '${p.main.replace(/'/g, "\\'")}', '${p.conf}', event)" style="background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.25); color: #38bdf8; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                🔗 <span>Share</span>
+            </button>
+        </div>
+
+        <!-- Collapsible Details Container -->
+        <div class="card-details collapsed" id="details-${p.fixture_id}" style="display: none; margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
+            ${p.league_avg_goals ? `
+            <div class="avg-goals-badge" style="margin-bottom: 0.6rem; font-size: 0.75rem;">
+                📊 League Avg: <strong>${p.league_avg_goals} goals/game</strong>
+            </div>
+            ` : ''}
+
+            <div class="confidence-gauge-container" style="margin-bottom: 0.8rem;">
+                <div class="gauge-label" style="font-size: 0.75rem; margin-bottom: 4px;">
+                    <span>Precision (${p.conf})</span>
+                    <span class="stake-label">Stake: <strong>${stakeAdvice}</strong></span>
+                </div>
+                <div class="gauge-track" style="height: 6px;">
+                    <div class="gauge-fill" style="width: ${confValue}%"></div>
+                </div>
+            </div>
+
+            <div class="recommended-picks-container" style="margin-bottom: 0.8rem;">
+                <div class="picks-title" style="font-size: 0.72rem; letter-spacing: 0.5px; margin-bottom: 0.4rem; opacity: 0.8;">🎯 TOP PRECISION PICKS</div>
+                <div class="picks-list" style="gap: 6px;">
+                    ${bestPicks.map((pick, idx) => `
+                        <div class="pick-item ${idx === 0 ? 'best-pick' : ''}" style="padding: 6px 10px; font-size: 0.75rem;">
+                            <span class="pick-market">${pick.badge} ${pick.type}</span>
+                            <span class="pick-val" style="font-weight: 700;">${pick.value}</span>
+                            <span class="pick-precision" style="font-size: 0.68rem; opacity: 0.8;">${pick.conf}% Precision</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            ${p.explanation && p.explanation !== 'N/A' && p.explanation !== '' ? `
+            <div class="verdict-detail" style="font-size: 0.75rem; line-height: 1.4; opacity: 0.85; margin-bottom: 0.8rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 0.5rem; color: #cbd5e1; font-style: italic;">
+                💡 <strong>Analysis:</strong> ${p.explanation}
+            </div>
+            ` : ''}
+
+            <div class="prediction-date-footer" style="margin-top: 0.5rem; font-size: 0.78rem; font-weight: 700; color: #f8fafc; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 0.5rem;">
+                📅 Kickoff: ${p.date} (GMT+1)
+            </div>
+        </div>
+    `;
+    return card;
+}
+
 function renderGrid() {
     const grid = document.getElementById('prediction-grid');
     grid.innerHTML = '';
@@ -199,214 +415,47 @@ function renderGrid() {
 
     const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    paginated.forEach((p, index) => {
-        const card = document.createElement('div');
-        card.className = 'prediction-card';
-        card.style.animationDelay = `${index * 0.1}s`;
-        
-        const confValue = parseInt(p.conf) || 50;
-
-        // Suggested Stake Units fallback calculation
-        let stakeAdvice = '2/10 Units';
-        if (confValue >= 85) stakeAdvice = '8/10 Units';
-        else if (confValue >= 75) stakeAdvice = '6/10 Units';
-        else if (confValue >= 65) stakeAdvice = '4/10 Units';
-
-        // Value Pick detection fallback calculation (statistical mismatch)
-        let isValueBet = false;
-        if (confValue >= 78) {
-            let homeStar = 5.0, awayStar = 5.0;
-            if (p.stars && p.stars.includes('H:') && p.stars.includes('A:')) {
-                const parts = p.stars.split(' ');
-                const hPart = parts.find(x => x.startsWith('H:'));
-                const aPart = parts.find(x => x.startsWith('A:'));
-                if (hPart) homeStar = parseFloat(hPart.substring(2)) || 5.0;
-                if (aPart) awayStar = parseFloat(aPart.substring(2)) || 5.0;
+    const isOlderArchiveMode = (currentView === 'yesterday' && yesterdaySubView === 'archive') || currentView === 'past';
+    
+    if (isOlderArchiveMode) {
+        // Group by kickoff date
+        let currentDateGroup = '';
+        paginated.forEach((p, index) => {
+            const matchDateOnly = p.date ? p.date.split(' ')[0] : 'Unknown';
+            if (matchDateOnly !== currentDateGroup) {
+                currentDateGroup = matchDateOnly;
+                
+                // Add a stylish date group header
+                const header = document.createElement('div');
+                header.className = 'archive-date-group-header';
+                header.style.width = '100%';
+                header.style.gridColumn = '1 / -1';
+                header.style.margin = '2rem 0 1rem 0';
+                header.style.padding = '10px 16px';
+                header.style.background = 'linear-gradient(90deg, rgba(14, 165, 233, 0.15), transparent)';
+                header.style.borderLeft = '4px solid var(--accent)';
+                header.style.borderRadius = '0 8px 8px 0';
+                header.style.fontSize = '1.05rem';
+                header.style.fontWeight = '700';
+                header.style.color = '#f8fafc';
+                header.style.fontFamily = 'Orbitron, sans-serif';
+                header.style.textShadow = '0 0 10px rgba(14,165,233,0.3)';
+                header.style.display = 'flex';
+                header.style.alignItems = 'center';
+                header.style.gap = '8px';
+                header.innerHTML = `📅 <span>${formatArchiveDate(matchDateOnly)}</span>`;
+                grid.appendChild(header);
             }
-            const starDiff = Math.abs(homeStar - awayStar);
-            const h2hVal = Math.abs(parseInt(p.h2h) || 0);
-            if (starDiff >= 1.2 || h2hVal >= 2) {
-                isValueBet = true;
-            }
-        }
-
-        let statusBadgeHtml = '';
-        let scoreHtml = '';
-        
-        if (p.status !== 'pending') {
-            const statusClass = p.status === 'won' ? 'status-won' : (p.status === 'lost' ? 'status-lost' : (p.status === 'void' ? 'status-void' : 'status-pending'));
-            const statusText = p.status === 'won' ? '✅ Won' : (p.status === 'lost' ? '❌ Lost' : (p.status === 'void' ? '➖ Void' : '⏳ Concluded'));
-            statusBadgeHtml = `<span class="past-status-badge ${statusClass}">${statusText}</span>`;
-        }
-        
-        if (p.actual_home_goals !== null && p.actual_away_goals !== null) {
-            scoreHtml = `
-                <div class="final-score-badge">
-                    ⚽ Score: <strong>${p.actual_home_goals} - ${p.actual_away_goals}</strong>
-                </div>
-            `;
-        }
-
-        // Generate the high-precision top 2-3 recommended picks
-        const picks = [];
-        
-        // 1. FT Outcome / Double Chance
-        if (p.main && !p.main.includes("Draw")) {
-            picks.push({
-                type: "Match Winner",
-                value: p.main,
-                conf: confValue,
-                badge: "🎯"
-            });
-        } else if (p.dc && p.dc !== "N/A") {
-            picks.push({
-                type: "Double Chance",
-                value: p.dc,
-                conf: Math.min(95, confValue + 12),
-                badge: "🛡️"
-            });
-        }
-
-        // 2. Goal Forecast / Over Under
-        if (p.ou_refined && p.ou_refined !== "N/A") {
-            let ouConf = 70;
-            if (p.ou_refined === "Over 1.5") ouConf = 82;
-            else if (p.ou_refined === "Under 3.5") ouConf = 80;
-            else if (p.ou_refined === "Over 2.5") ouConf = 73;
-            else if (p.ou_refined === "Under 2.5") ouConf = 71;
             
-            picks.push({
-                type: "Goal Line",
-                value: p.ou_refined,
-                conf: ouConf,
-                badge: "💎"
-            });
-        }
-
-        // 3. Both Teams to Score (BTTS) removed as requested due to risk profile
-
-        // 4. First Half Goals
-        if (p.ht_ft && p.ht_ft !== "N/A") {
-            let fhConf = (p.ht_ft === "FH Under 1.5" ? 82 : 71) + (p.away.length % 7);
-            picks.push({
-                type: "First Half Goals",
-                value: p.ht_ft,
-                conf: fhConf,
-                badge: "⏱️"
-            });
-        }
-
-        // 5. Corners (Dynamic Custom Prediction)
-        const highCornerLeagues = ["Premier League", "Championship", "Allsvenskan", "Bundesliga", "Eredivisie"];
-        const isHighCorner = highCornerLeagues.some(l => p.league && p.league.includes(l));
-        const hashSeed = (p.home.length + p.away.length) % 3;
-        let cornerLine = isHighCorner ? 9.5 : 8.5;
-        if (hashSeed === 0) cornerLine -= 1;
-        else if (hashSeed === 1) cornerLine += 1;
-        const cornerConf = Math.min(88, 65 + (p.home.length % 15) + (p.away.length % 10));
-
-        picks.push({
-            type: "Corners Pick",
-            value: `Over ${cornerLine} Corners`,
-            conf: cornerConf,
-            badge: "🚩"
+            const card = renderCardElement(p, index);
+            grid.appendChild(card);
         });
-
-        // 6. Combo Bet
-        if (p.combos && p.combos !== "N/A" && confValue >= 75) {
-            picks.push({
-                type: "Value Combo",
-                value: p.combos,
-                conf: Math.max(60, confValue - 5),
-                badge: "⚡"
-            });
-        }
-
-        // Sort by confidence level to show the absolute best/safest picks first!
-        picks.sort((a, b) => b.conf - a.conf);
-
-        // Keep only top 2-3 picks for clean user display
-        const bestPicks = picks.slice(0, 3);
-
-        const dates = getGMTPlus1DateStrings();
-        card.innerHTML = `
-            <div class="card-header" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.6rem; margin-bottom: 0.6rem;">
-                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.75rem; opacity: 0.95;">
-                    <div>
-                        <span class="card-tier">${p.status === 'pending' ? 'Beacon V4 ML' : (p.date.startsWith(dates.yesterday) ? 'Yesterday' : 'Archive')}</span>
-                        ${isValueBet ? '<span class="value-bet-badge">🔥 Value Pick</span>' : ''}
-                    </div>
-                    <span>${p.league}</span>
-                </div>
-                <div style="font-size: 0.65rem; opacity: 0.7; margin-top: 2px;">
-                    Generated: ${p.created_at || 'N/A'} (GMT+1)
-                </div>
-            </div>
-            <div class="teams" style="font-size: 1.15rem; margin-bottom: 0.4rem;">
-                ${p.home} <span style="font-size: 0.9rem; opacity: 0.6;">VS</span> ${p.away}
-            </div>
-
-            ${statusBadgeHtml}
-            ${scoreHtml}
-
-            <div class="main-outcome" style="margin: 0.6rem 0; font-size: 0.95rem; font-weight: 600;">
-                🎯 Verdict: <strong style="color: var(--accent);">${p.main}</strong>
-            </div>
-
-            <!-- Share and Toggle Buttons -->
-            <div style="display: flex; gap: 8px; margin-top: 0.4rem;">
-                <button class="toggle-card-btn" onclick="toggleCardDetails(${p.fixture_id}, this)" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
-                    <span>Show Details</span> <span class="arrow-icon">▼</span>
-                </button>
-                <button class="share-card-btn" onclick="sharePrediction('${p.home.replace(/'/g, "\\'")}', '${p.away.replace(/'/g, "\\'")}', '${p.main.replace(/'/g, "\\'")}', '${p.conf}', event)" style="background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.25); color: #38bdf8; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
-                    🔗 <span>Share</span>
-                </button>
-            </div>
-
-            <!-- Collapsible Details Container -->
-            <div class="card-details collapsed" id="details-${p.fixture_id}" style="display: none; margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
-                ${p.league_avg_goals ? `
-                <div class="avg-goals-badge" style="margin-bottom: 0.6rem; font-size: 0.75rem;">
-                    📊 League Avg: <strong>${p.league_avg_goals} goals/game</strong>
-                </div>
-                ` : ''}
-
-                <div class="confidence-gauge-container" style="margin-bottom: 0.8rem;">
-                    <div class="gauge-label" style="font-size: 0.75rem; margin-bottom: 4px;">
-                        <span>Precision (${p.conf})</span>
-                        <span class="stake-label">Stake: <strong>${stakeAdvice}</strong></span>
-                    </div>
-                    <div class="gauge-track" style="height: 6px;">
-                        <div class="gauge-fill" style="width: ${confValue}%"></div>
-                    </div>
-                </div>
-
-                <div class="recommended-picks-container" style="margin-bottom: 0.8rem;">
-                    <div class="picks-title" style="font-size: 0.72rem; letter-spacing: 0.5px; margin-bottom: 0.4rem; opacity: 0.8;">🎯 TOP PRECISION PICKS</div>
-                    <div class="picks-list" style="gap: 6px;">
-                        ${bestPicks.map((pick, idx) => `
-                            <div class="pick-item ${idx === 0 ? 'best-pick' : ''}" style="padding: 6px 10px; font-size: 0.75rem;">
-                                <span class="pick-market">${pick.badge} ${pick.type}</span>
-                                <span class="pick-val" style="font-weight: 700;">${pick.value}</span>
-                                <span class="pick-precision" style="font-size: 0.68rem; opacity: 0.8;">${pick.conf}% Precision</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                ${p.explanation && p.explanation !== 'N/A' && p.explanation !== '' ? `
-                <div class="verdict-detail" style="font-size: 0.75rem; line-height: 1.4; opacity: 0.85; margin-bottom: 0.8rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 0.5rem; color: #cbd5e1; font-style: italic;">
-                    💡 <strong>Analysis:</strong> ${p.explanation}
-                </div>
-                ` : ''}
-
-                <div class="prediction-date-footer" style="margin-top: 0.5rem; font-size: 0.78rem; font-weight: 700; color: #f8fafc; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 0.5rem;">
-                    📅 Kickoff: ${p.date} (GMT+1)
-                </div>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
+    } else {
+        paginated.forEach((p, index) => {
+            const card = renderCardElement(p, index);
+            grid.appendChild(card);
+        });
+    }
 
     renderPagination(totalPages);
 }
@@ -661,5 +710,93 @@ function sharePrediction(home, away, main, conf, event) {
             const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
             window.open(twitterUrl, '_blank');
         });
+    }
+}
+
+function shareDailySummary() {
+    let list = [];
+    if (currentView === 'active') {
+        list = todayPredictions;
+    } else if (currentView === 'yesterday') {
+        if (yesterdaySubView === 'yesterday') {
+            list = yesterdayPredictions;
+        } else {
+            list = archivePredictions;
+        }
+    } else {
+        list = archivePredictions;
+    }
+    
+    // Apply active filter
+    if (activeFilter !== 'All') {
+        list = list.filter(p => p.league === activeFilter);
+    }
+    
+    if (list.length === 0) {
+        alert("No predictions available to share.");
+        return;
+    }
+    
+    const dateLabel = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    let text = `🚀 NorraAI Daily Picks (${dateLabel}) ⚽\n\n`;
+    list.slice(0, 12).forEach(p => {
+        text += `🎯 ${p.home} vs ${p.away}\n🔮 Verdict: ${p.main} (${p.conf} Precision)\n\n`;
+    });
+    text += `🎯 Get real-time high-precision AI football tips at:\n🔗 https://mynorra.xyz`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: `NorraAI Daily Picks Summary`,
+            text: text,
+            url: 'https://mynorra.xyz'
+        }).then(() => {
+            console.log('Successfully shared summary sheet');
+        }).catch((err) => {
+            console.error('Error sharing:', err);
+        });
+    } else {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Daily Picks summary sheet copied to clipboard! Opening Twitter...");
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text.substring(0, 250) + "...")}`;
+            window.open(twitterUrl, '_blank');
+        }).catch((err) => {
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text.substring(0, 250) + "...")}`;
+            window.open(twitterUrl, '_blank');
+        });
+    }
+}
+
+function toggleScreenshotMode() {
+    document.body.classList.toggle('screenshot-mode-active');
+    
+    let exitBtn = document.getElementById('exit-screenshot-btn');
+    if (!exitBtn) {
+        exitBtn = document.createElement('button');
+        exitBtn.id = 'exit-screenshot-btn';
+        exitBtn.innerHTML = '❌ Exit Screenshot Mode';
+        exitBtn.style.position = 'fixed';
+        exitBtn.style.bottom = '24px';
+        exitBtn.style.right = '24px';
+        exitBtn.style.zIndex = '100000';
+        exitBtn.style.background = '#ef4444';
+        exitBtn.style.color = '#fff';
+        exitBtn.style.border = 'none';
+        exitBtn.style.padding = '12px 24px';
+        exitBtn.style.borderRadius = '30px';
+        exitBtn.style.fontWeight = '700';
+        exitBtn.style.cursor = 'pointer';
+        exitBtn.style.boxShadow = '0 10px 25px rgba(239, 68, 68, 0.5)';
+        exitBtn.style.fontFamily = 'Orbitron, sans-serif';
+        exitBtn.style.letterSpacing = '0.5px';
+        exitBtn.style.fontSize = '0.85rem';
+        exitBtn.style.transition = 'all 0.2s';
+        exitBtn.onclick = toggleScreenshotMode;
+        document.body.appendChild(exitBtn);
+    }
+    
+    if (document.body.classList.contains('screenshot-mode-active')) {
+        exitBtn.style.display = 'block';
+    } else {
+        exitBtn.style.display = 'none';
     }
 }

@@ -1229,3 +1229,38 @@ footer a:hover {
     box-shadow: 0 0 10px rgba(0, 242, 255, 0.15);
 }
 
+/* --- Screenshot Mode Overrides --- */
+body.screenshot-mode-active nav,
+body.screenshot-mode-active header,
+body.screenshot-mode-active footer,
+body.screenshot-mode-active .view-toggle-container,
+body.screenshot-mode-active .sub-toggle-container,
+body.screenshot-mode-active .filter-container,
+body.screenshot-mode-active #pagination-container,
+body.screenshot-mode-active .action-buttons-container,
+body.screenshot-mode-active .cookie-banner,
+body.screenshot-mode-active .share-card-btn,
+body.screenshot-mode-active .toggle-card-btn,
+body.screenshot-mode-active .avg-goals-badge,
+body.screenshot-mode-active .verdict-detail {
+    display: none !important;
+}
+
+body.screenshot-mode-active {
+    padding-top: 20px;
+    background: #0b0f19;
+}
+
+body.screenshot-mode-active::before {
+    content: "🚀 NORRA AI DAILY PICKS ⚽";
+    display: block;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+}
+

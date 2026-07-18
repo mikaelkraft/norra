@@ -75,6 +75,16 @@
         </div>
     </div>
 
+    <!-- Action buttons for sharing daily summary & screenshotting -->
+    <div class="action-buttons-container" style="display: flex; gap: 10px; max-width: 1200px; margin: 10px auto; padding: 0 20px; justify-content: flex-end;">
+        <button id="btn-share-summary" class="action-btn" onclick="shareDailySummary()" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); color: #38bdf8; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 600; font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 6px;">
+            🔗 Share Daily Picks Sheet
+        </button>
+        <button id="btn-screenshot-mode" class="action-btn" onclick="toggleScreenshotMode()" style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); color: #a855f7; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 600; font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 6px;">
+            📸 Screenshot Mode
+        </button>
+    </div>
+
     <main id="prediction-grid">
         <!-- Predictions will be injected here -->
         <div class="loading">Aligning Beacon Sensors...</div>
@@ -131,6 +141,7 @@
         <p class="gamble-warning">🔞 18+ | Play Responsibly | <a href="https://www.begambleaware.org" target="_blank" rel="noopener">BeGambleAware.org</a></p>
         <p class="legal-disclaimer">Disclaimer: Norra AI provides mathematical estimations. Sports betting involves financial risk. We accept no liability for losses.</p>
         <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. <a href="javascript:void(0)" onclick="openModal('terms-modal')">Terms</a> | <a href="javascript:void(0)" onclick="openModal('privacy-modal')">Privacy</a>. All rights mathematical.</p>
+        <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.8;">Made with ❤ by <a href="https://github.com/mikaelkraft" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">Mikael Kraft</a></p>
     </footer>
 
     <script src="app.js"></script>
