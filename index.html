@@ -30,6 +30,7 @@
             NORRA<span>AI</span>
         </div>
         <div class="nav-actions">
+            <button onclick="toggleTheme()" class="theme-toggle-btn">🌓 Theme</button>
             <button onclick="promptAdminAccess()" class="admin-btn">Admin Only</button>
             <div class="status-badge"><span class="pulse"></span> Beacon Active</div>
         </div>
@@ -73,6 +74,33 @@
               fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'scorebat-jssdk'));</script>
         </div>
+    </div>
+
+    <!-- Daily Statistics Widget -->
+    <div id="stats-widget-container" class="stats-widget-container">
+        <div class="stats-widget">
+            <div class="stats-widget-item">
+                <div id="stats-total-games" class="stats-widget-num">-</div>
+                <div class="stats-widget-lbl">Total Games</div>
+            </div>
+            <div class="stats-widget-item">
+                <div id="stats-high-precision" class="stats-widget-num">-</div>
+                <div class="stats-widget-lbl">Top Picks (>70%)</div>
+            </div>
+            <div class="stats-widget-item">
+                <div id="stats-goal-picks" class="stats-widget-num">-</div>
+                <div class="stats-widget-lbl">Goal/BTTS Picks</div>
+            </div>
+            <div class="stats-widget-item">
+                <div id="stats-avg-precision" class="stats-widget-num">-</div>
+                <div class="stats-widget-lbl">Avg Precision</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div id="search-container" class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="🔍 Search by team, league, or country...">
     </div>
 
     <!-- Action buttons for sharing daily summary & screenshotting -->
@@ -137,11 +165,34 @@
         </div>
     </div>
 
+    <!-- Sponsors & Partner Network Ads -->
+    <section class="ads-section">
+        <div class="ads-widget-card">
+            <div class="ads-header-lbl">Network Partners & Sponsorship</div>
+            <div class="ads-placeholder">
+                Advertising Space - Partner Networks & AdSense integration placeholder.
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner" class="pwa-install-banner hidden">
+        <div class="pwa-content">
+            <h4>Install Norra AI</h4>
+            <p>Add to Home Screen for fast offline access</p>
+        </div>
+        <button id="btn-pwa-install" class="pwa-install-btn">Install</button>
+        <button id="btn-pwa-close" class="pwa-close-btn">&times;</button>
+    </div>
+
     <footer>
         <p class="gamble-warning">🔞 18+ | Play Responsibly | <a href="https://www.begambleaware.org" target="_blank" rel="noopener">BeGambleAware.org</a></p>
         <p class="legal-disclaimer">Disclaimer: Norra AI provides mathematical estimations. Sports betting involves financial risk. We accept no liability for losses.</p>
-        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. <a href="javascript:void(0)" onclick="openModal('terms-modal')">Terms</a> | <a href="javascript:void(0)" onclick="openModal('privacy-modal')">Privacy</a>. All rights mathematical.</p>
-        <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.8;">Made with ❤ by <a href="https://github.com/mikaelkraft" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">Mikael Kraft</a></p>
+        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. <a href="/terms" target="_blank">Terms</a> | <a href="/privacy" target="_blank">Privacy</a>. All rights mathematical.</p>
+        <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.8;">Made with ❤ by <a href="https://github.com/mikaelkraft" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none; font-weight: 600;">Mikael Kraft</a></p>
     </footer>
 
     <script src="app.js"></script>

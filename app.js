@@ -105,18 +105,29 @@ function switchView(view) {
         }
     }
     
+    const actionBtns = document.querySelector('.action-buttons-container');
+    const statsWidget = document.getElementById('stats-widget-container');
+    const searchContainer = document.getElementById('search-container');
+    
     if (view === 'active' || view === 'yesterday' || view === 'past') {
         grid.classList.remove('hidden');
         if (liveContainer) liveContainer.classList.add('hidden');
         if (filterContainer) filterContainer.classList.remove('hidden');
         if (paginationContainer) paginationContainer.classList.remove('hidden');
+        if (actionBtns) actionBtns.style.display = 'flex';
+        if (statsWidget) statsWidget.style.display = 'block';
+        if (searchContainer) searchContainer.style.display = 'block';
         renderFilters();
         renderGrid();
+        if (typeof computeDailyStats === 'function') computeDailyStats();
     } else if (view === 'live') {
         grid.classList.add('hidden');
         if (filterContainer) filterContainer.classList.add('hidden');
         if (paginationContainer) paginationContainer.classList.add('hidden');
         if (liveContainer) liveContainer.classList.remove('hidden');
+        if (actionBtns) actionBtns.style.display = 'none';
+        if (statsWidget) statsWidget.style.display = 'none';
+        if (searchContainer) searchContainer.style.display = 'none';
     }
 }
 
@@ -317,14 +328,14 @@ function renderCardElement(p, index) {
                 Generated: ${p.created_at || 'N/A'} (GMT+1)
             </div>
         </div>
-        <div class="teams" style="font-size: 1.15rem; margin-bottom: 0.4rem;">
-            ${p.home} <span style="font-size: 0.9rem; opacity: 0.6;">VS</span> ${p.away}
+        <div class="teams" style="font-size: 0.95rem; margin-bottom: 0.3rem;">
+            ${p.home} <span style="font-size: 0.8rem; opacity: 0.6;">VS</span> ${p.away}
         </div>
 
         ${statusBadgeHtml}
         ${scoreHtml}
 
-        <div class="main-outcome" style="margin: 0.6rem 0; font-size: 0.95rem; font-weight: 600;">
+        <div class="main-outcome" style="margin: 0.4rem 0; font-size: 0.88rem; font-weight: 600;">
             🎯 Verdict: <strong style="color: var(--accent);">${p.main}</strong>
         </div>
 
@@ -400,9 +411,19 @@ function renderGrid() {
         visiblePredictions = archivePredictions;
     }
 
-    const filtered = activeFilter === 'All' 
+    let filtered = activeFilter === 'All' 
         ? visiblePredictions 
         : visiblePredictions.filter(p => p.league === activeFilter);
+
+    const searchInput = document.getElementById('search-input');
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    if (query) {
+        filtered = filtered.filter(p => 
+            p.home.toLowerCase().includes(query) ||
+            p.away.toLowerCase().includes(query) ||
+            p.league.toLowerCase().includes(query)
+        );
+    }
 
     if (filtered.length === 0) {
         grid.innerHTML = '<div class="loading">No beacons found for this sector.</div>';
@@ -458,6 +479,9 @@ function renderGrid() {
     }
 
     renderPagination(totalPages);
+    if (typeof computeDailyStats === 'function') {
+        computeDailyStats(filtered);
+    }
 }
 
 function renderPagination(totalPages) {
@@ -625,10 +649,42 @@ function setYesterdayLabel() {
 
 // Fetch on load
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     fetchPredictions();
     setYesterdayLabel();
     setDynamicYear();
     checkCookies();
+
+    // Bind Search Input
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            currentPage = 1;
+            renderGrid();
+        });
+    }
+
+    // Bind PWA Install Button
+    const pwaBtn = document.getElementById('btn-pwa-install');
+    const pwaClose = document.getElementById('btn-pwa-close');
+    const installBanner = document.getElementById('pwa-install-banner');
+
+    if (pwaBtn) {
+        pwaBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to PWA install: ${outcome}`);
+            deferredPrompt = null;
+            if (installBanner) installBanner.classList.add('hidden');
+        });
+    }
+
+    if (pwaClose) {
+        pwaClose.addEventListener('click', () => {
+            if (installBanner) installBanner.classList.add('hidden');
+        });
+    }
 
     // Register Service Worker for PWA Support
     if ('serviceWorker' in navigator) {
@@ -659,11 +715,11 @@ async function promptAdminAccess() {
                 : 'https://norra-ai.onrender.com';
             window.location.href = `${adminBase}/admin?token=${data.token}`;
         } else {
-            alert(data.message || "Access Denied. Be gone, snooper!");
+            showToast(data.message || "Access Denied. Be gone, snooper!", "error");
         }
     } catch (err) {
         console.error("Access check failed:", err);
-        alert("A system error occurred. Access Denied.");
+        showToast("A system error occurred. Access Denied.", "error");
     }
 }
 
@@ -701,14 +757,14 @@ function sharePrediction(home, away, main, conf, event) {
             console.error('Error sharing:', err);
         });
     } else {
-        // Fallback: Copy to clipboard and open Twitter Web Intent
+        // Fallback: Copy to clipboard and open X Web Intent
         navigator.clipboard.writeText(text).then(() => {
-            alert("Prediction copied to clipboard! Opening Twitter...");
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(twitterUrl, '_blank');
+            showToast("Prediction copied to clipboard! Opening X...", "success");
+            const xUrl = `https://x.com/intent/post?text=${encodeURIComponent(text)}`;
+            window.open(xUrl, '_blank');
         }).catch((err) => {
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(twitterUrl, '_blank');
+            const xUrl = `https://x.com/intent/post?text=${encodeURIComponent(text)}`;
+            window.open(xUrl, '_blank');
         });
     }
 }
@@ -733,7 +789,7 @@ function shareDailySummary() {
     }
     
     if (list.length === 0) {
-        alert("No predictions available to share.");
+        showToast("No predictions available to share.", "warning");
         return;
     }
     
@@ -756,12 +812,12 @@ function shareDailySummary() {
         });
     } else {
         navigator.clipboard.writeText(text).then(() => {
-            alert("Daily Picks summary sheet copied to clipboard! Opening Twitter...");
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text.substring(0, 250) + "...")}`;
-            window.open(twitterUrl, '_blank');
+            showToast("Daily Picks summary sheet copied to clipboard! Opening X...", "success");
+            const xUrl = `https://x.com/intent/post?text=${encodeURIComponent(text.substring(0, 250) + "...")}`;
+            window.open(xUrl, '_blank');
         }).catch((err) => {
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text.substring(0, 250) + "...")}`;
-            window.open(twitterUrl, '_blank');
+            const xUrl = `https://x.com/intent/post?text=${encodeURIComponent(text.substring(0, 250) + "...")}`;
+            window.open(xUrl, '_blank');
         });
     }
 }
@@ -800,3 +856,107 @@ function toggleScreenshotMode() {
         exitBtn.style.display = 'none';
     }
 }
+
+// --- Theme Switching Support ---
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+    } else {
+        document.body.classList.remove('light-theme');
+    }
+}
+
+// --- Custom Toast Notification System ---
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let emoji = '🔮';
+    if (type === 'success') emoji = '✅';
+    if (type === 'error') emoji = '❌';
+    if (type === 'warning') emoji = '⚠️';
+    
+    toast.innerHTML = `<span>${emoji}</span> <span>${message}</span>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+            if (toast.parentNode === container) {
+                container.removeChild(toast);
+            }
+        }, 300);
+    }, 3700);
+}
+
+// --- Daily Statistics Widget ---
+function computeDailyStats(list) {
+    if (!list) {
+        list = [];
+        if (currentView === 'active') {
+            list = todayPredictions;
+        } else if (currentView === 'yesterday') {
+            if (yesterdaySubView === 'yesterday') {
+                list = yesterdayPredictions;
+            } else {
+                list = archivePredictions;
+            }
+        } else {
+            list = archivePredictions;
+        }
+        
+        // Match active filter
+        if (activeFilter !== 'All') {
+            list = list.filter(p => p.league === activeFilter);
+        }
+    }
+    
+    const totalGames = list.length;
+    const topPicks = list.filter(p => parseFloat(p.conf) >= 70.0).length;
+    
+    const goalPicks = list.filter(p => 
+        p.main.toLowerCase().includes('goals') || 
+        p.main.toLowerCase().includes('score') || 
+        p.main.toLowerCase().includes('gg') || 
+        p.main.toLowerCase().includes('ng')
+    ).length;
+    
+    let avgPrecision = 0;
+    if (totalGames > 0) {
+        const sum = list.reduce((acc, p) => acc + parseFloat(p.conf), 0);
+        avgPrecision = Math.round(sum / totalGames);
+    }
+    
+    const elTotal = document.getElementById('stats-total-games');
+    const elTop = document.getElementById('stats-high-precision');
+    const elGoal = document.getElementById('stats-goal-picks');
+    const elAvg = document.getElementById('stats-avg-precision');
+    
+    if (elTotal) elTotal.textContent = totalGames;
+    if (elTop) elTop.textContent = topPicks;
+    if (elGoal) elGoal.textContent = goalPicks;
+    if (elAvg) elAvg.textContent = totalGames > 0 ? `${avgPrecision}%` : '-';
+}
+
+// --- PWA Install Flow ---
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installBanner = document.getElementById('pwa-install-banner');
+    if (installBanner) {
+        installBanner.classList.remove('hidden');
+    }
+});
+
+// Initialize theme immediately on script load
+initTheme();
