@@ -654,6 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setYesterdayLabel();
     setDynamicYear();
     checkCookies();
+    fetchActiveAds();
 
     // Bind Search Input
     const searchInput = document.getElementById('search-input');
@@ -823,37 +824,98 @@ function shareDailySummary() {
 }
 
 function toggleScreenshotMode() {
-    document.body.classList.toggle('screenshot-mode-active');
-    
-    let exitBtn = document.getElementById('exit-screenshot-btn');
-    if (!exitBtn) {
-        exitBtn = document.createElement('button');
-        exitBtn.id = 'exit-screenshot-btn';
-        exitBtn.innerHTML = '❌ Exit Screenshot Mode';
-        exitBtn.style.position = 'fixed';
-        exitBtn.style.bottom = '24px';
-        exitBtn.style.right = '24px';
-        exitBtn.style.zIndex = '100000';
-        exitBtn.style.background = '#ef4444';
-        exitBtn.style.color = '#fff';
-        exitBtn.style.border = 'none';
-        exitBtn.style.padding = '12px 24px';
-        exitBtn.style.borderRadius = '30px';
-        exitBtn.style.fontWeight = '700';
-        exitBtn.style.cursor = 'pointer';
-        exitBtn.style.boxShadow = '0 10px 25px rgba(239, 68, 68, 0.5)';
-        exitBtn.style.fontFamily = 'Orbitron, sans-serif';
-        exitBtn.style.letterSpacing = '0.5px';
-        exitBtn.style.fontSize = '0.85rem';
-        exitBtn.style.transition = 'all 0.2s';
+    const isActive = document.body.classList.toggle('screenshot-mode-active');
+    const screenshotHeader = document.getElementById('screenshot-header');
+    const dateLabel = document.getElementById('screenshot-date-label');
+
+    // Manage floating capture bar
+    let captureBar = document.getElementById('screenshot-capture-bar');
+    if (!captureBar) {
+        captureBar = document.createElement('div');
+        captureBar.id = 'screenshot-capture-bar';
+        captureBar.className = 'screenshot-capture-bar';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.innerHTML = '💾 Save Pick Sheet';
+        saveBtn.onclick = captureScreenshot;
+        captureBar.appendChild(saveBtn);
+
+        const exitBtn = document.createElement('button');
+        exitBtn.innerHTML = '❌ Exit';
+        exitBtn.className = 'exit-screenshot-btn';
         exitBtn.onclick = toggleScreenshotMode;
-        document.body.appendChild(exitBtn);
+        captureBar.appendChild(exitBtn);
+
+        document.body.appendChild(captureBar);
     }
-    
-    if (document.body.classList.contains('screenshot-mode-active')) {
-        exitBtn.style.display = 'block';
+
+    if (isActive) {
+        // Set dynamic date
+        const now = new Date();
+        const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
+        if (dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', options);
+        if (screenshotHeader) screenshotHeader.classList.remove('hidden');
+        captureBar.style.display = 'flex';
     } else {
-        exitBtn.style.display = 'none';
+        if (screenshotHeader) screenshotHeader.classList.add('hidden');
+        captureBar.style.display = 'none';
+    }
+}
+
+function captureScreenshot() {
+    const grid = document.getElementById('prediction-grid');
+    const screenshotHeader = document.getElementById('screenshot-header');
+    const captureBar = document.getElementById('screenshot-capture-bar');
+
+    if (!grid) {
+        showToast('No predictions grid found to capture.', 'warning');
+        return;
+    }
+
+    // Temporarily hide the capture bar during capture
+    if (captureBar) captureBar.style.display = 'none';
+
+    // Create a temporary wrapper that includes header + grid for a clean capture
+    const wrapper = document.createElement('div');
+    wrapper.style.background = getComputedStyle(document.body).backgroundColor || '#0b0f19';
+    wrapper.style.padding = '20px';
+    wrapper.style.borderRadius = '16px';
+
+    if (screenshotHeader) {
+        const headerClone = screenshotHeader.cloneNode(true);
+        headerClone.classList.remove('hidden');
+        headerClone.style.display = 'block';
+        wrapper.appendChild(headerClone);
+    }
+
+    const gridClone = grid.cloneNode(true);
+    wrapper.appendChild(gridClone);
+    document.body.appendChild(wrapper);
+
+    if (typeof html2canvas !== 'undefined') {
+        html2canvas(wrapper, {
+            backgroundColor: '#0b0f19',
+            scale: 2,
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            const link = document.createElement('a');
+            const dateStr = new Date().toISOString().split('T')[0];
+            link.download = `NorraAI-Picks-${dateStr}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast('Pick Sheet saved as image!', 'success');
+        }).catch(err => {
+            console.error('Screenshot capture error:', err);
+            showToast('Failed to capture screenshot. Try a manual screenshot.', 'warning');
+        }).finally(() => {
+            document.body.removeChild(wrapper);
+            if (captureBar) captureBar.style.display = 'flex';
+        });
+    } else {
+        document.body.removeChild(wrapper);
+        if (captureBar) captureBar.style.display = 'flex';
+        showToast('html2canvas library not loaded. Use a manual screenshot.', 'warning');
     }
 }
 
@@ -957,6 +1019,34 @@ window.addEventListener('beforeinstallprompt', (e) => {
         installBanner.classList.remove('hidden');
     }
 });
+
+// --- Dynamic Ads Loader ---
+async function fetchActiveAds() {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/get-ads`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.html && data.html.trim().length > 0) {
+            const adsPlaceholder = document.querySelector('.ads-placeholder');
+            if (adsPlaceholder) {
+                adsPlaceholder.innerHTML = data.html;
+                // Execute any <script> tags within the injected HTML
+                const scripts = adsPlaceholder.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    oldScript.replaceWith(newScript);
+                });
+            }
+        }
+    } catch (err) {
+        console.log('Ads fetch skipped:', err.message);
+    }
+}
 
 // Initialize theme immediately on script load
 initTheme();

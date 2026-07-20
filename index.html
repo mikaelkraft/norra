@@ -19,8 +19,15 @@
     
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+    <!-- Hidden Screenshot Header -->
+    <div id="screenshot-header" class="screenshot-header hidden">
+        <h2>🚀 NORRA AI DAILY PICKS ⚽</h2>
+        <div id="screenshot-date-label"></div>
+    </div>
+
     <div class="background-blob"></div>
     <div class="background-blob-2"></div>
 
@@ -191,8 +198,11 @@
     <footer>
         <p class="gamble-warning">🔞 18+ | Play Responsibly | <a href="https://www.begambleaware.org" target="_blank" rel="noopener">BeGambleAware.org</a></p>
         <p class="legal-disclaimer">Disclaimer: Norra AI provides mathematical estimations. Sports betting involves financial risk. We accept no liability for losses.</p>
-        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. <a href="/terms" target="_blank">Terms</a> | <a href="/privacy" target="_blank">Privacy</a>. All rights mathematical.</p>
-        <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.8;">Made with ❤ by <a href="https://github.com/mikaelkraft" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none; font-weight: 600;">Mikael Kraft</a></p>
+        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. <a href="terms.html" target="_blank">Terms</a> | <a href="privacy.html" target="_blank">Privacy</a>. All rights mathematical.</p>
+        <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.8;">
+            Made with ❤ by <a href="https://github.com/mikaelkraft" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none; font-weight: 600;">Mikael Kraft</a>
+            <a href="https://x.com/norra_ai" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none; font-weight: 600; margin-left: 12px;">Follow @norra_ai on 𝕏</a>
+        </p>
     </footer>
 
     <script src="app.js"></script>
