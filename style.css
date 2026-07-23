@@ -1063,11 +1063,11 @@ footer a:hover {
 }
 .prediction-date-footer {
     font-size: 0.75rem;
-    opacity: 0.95; /* Brighter opacity */
-    color: #f8fafc; /* Bright white-slate color */
+    opacity: 0.95;
+    color: var(--text-bright);
     margin-top: 0.8rem;
     text-align: right;
-    border-top: 1px dashed rgba(255,255,255,0.05);
+    border-top: 1px dashed var(--glass-border);
     padding-top: 0.6rem;
 }
 
@@ -1228,7 +1228,7 @@ footer a:hover {
 }
 .pick-market {
     font-weight: 500;
-    color: #94a3b8;
+    color: var(--text);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -1236,7 +1236,7 @@ footer a:hover {
 .pick-val {
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-bright);
     background: rgba(0, 242, 255, 0.1);
     padding: 2px 8px;
     border-radius: 6px;
@@ -1616,3 +1616,54 @@ body.light-theme .toast {
     opacity: 0.6;
     margin: -8px 0 12px;
 }
+
+/* --- Light Mode Visibility Overrides --- */
+body.light-theme .prediction-date-footer {
+    color: var(--text-bright) !important;
+    border-top: 1px dashed var(--glass-border) !important;
+    opacity: 0.85;
+}
+body.light-theme .avg-goals-badge {
+    color: var(--text) !important;
+    background: rgba(15, 23, 42, 0.03) !important;
+    border: 1px dashed rgba(2, 132, 199, 0.2) !important;
+}
+body.light-theme .final-score-badge {
+    color: var(--text-bright) !important;
+    background: rgba(15, 23, 42, 0.03) !important;
+    border: 1px solid var(--glass-border) !important;
+}
+body.light-theme .pick-item {
+    background: rgba(15, 23, 42, 0.03) !important;
+    border: 1px solid var(--glass-border) !important;
+}
+body.light-theme .pick-market {
+    color: var(--text) !important;
+}
+body.light-theme .pick-val {
+    color: var(--accent) !important;
+    background: rgba(2, 132, 199, 0.08) !important;
+    border: 1px solid rgba(2, 132, 199, 0.2) !important;
+}
+body.light-theme .best-pick {
+    background: rgba(217, 119, 6, 0.06) !important;
+    border: 2px solid #d97706 !important;
+    box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.12) !important;
+}
+body.light-theme .best-pick .pick-val {
+    color: #b45309 !important;
+    background: rgba(217, 119, 6, 0.1) !important;
+    border: 1px solid rgba(217, 119, 6, 0.2) !important;
+}
+body.light-theme .gauge-track {
+    background: rgba(15, 23, 42, 0.06) !important;
+}
+body.light-theme .stat-label {
+    opacity: 0.75 !important;
+    color: var(--text) !important;
+}
+body.light-theme .verdict-detail {
+    color: var(--text) !important;
+    border-top: 1px dashed var(--glass-border) !important;
+}
+

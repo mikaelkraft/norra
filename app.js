@@ -1029,17 +1029,38 @@ async function fetchActiveAds() {
         if (data.html && data.html.trim().length > 0) {
             const adsPlaceholder = document.querySelector('.ads-placeholder');
             if (adsPlaceholder) {
-                adsPlaceholder.innerHTML = data.html;
-                // Execute any <script> tags within the injected HTML
+                // Parse HTML to extract meta/link verification tags for the head
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data.html;
+                
+                const headTags = tempDiv.querySelectorAll('meta, link, title, style');
+                headTags.forEach(tag => {
+                    document.head.appendChild(tag);
+                });
+                
+                // Set the remaining content to body placeholder
+                adsPlaceholder.innerHTML = tempDiv.innerHTML;
+                
+                // Re-run script tags, placing AdSense library scripts inside <head>
                 const scripts = adsPlaceholder.querySelectorAll('script');
                 scripts.forEach(oldScript => {
                     const newScript = document.createElement('script');
+                    Array.from(oldScript.attributes).forEach(attr => {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    
                     if (oldScript.src) {
                         newScript.src = oldScript.src;
                     } else {
                         newScript.textContent = oldScript.textContent;
                     }
-                    oldScript.replaceWith(newScript);
+                    
+                    if (oldScript.src || oldScript.textContent.includes('adsbygoogle') || oldScript.hasAttribute('data-head')) {
+                        document.head.appendChild(newScript);
+                        oldScript.remove();
+                    } else {
+                        oldScript.replaceWith(newScript);
+                    }
                 });
             }
         }
