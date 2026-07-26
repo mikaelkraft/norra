@@ -152,20 +152,20 @@ nav {
 
 .admin-btn {
     background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    padding: 0.3rem 0.65rem;
-    border-radius: 20px;
-    font-size: 0.65rem;
-    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.35);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .admin-btn:hover {
-    background: var(--accent);
-    color: #020617;
-    box-shadow: 0 0 15px var(--accent);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .theme-toggle-btn {
@@ -1303,13 +1303,44 @@ body.screenshot-mode-active .cookie-banner,
 body.screenshot-mode-active .share-card-btn,
 body.screenshot-mode-active .toggle-card-btn,
 body.screenshot-mode-active .avg-goals-badge,
-body.screenshot-mode-active .verdict-detail {
+body.screenshot-mode-active .verdict-detail,
+body.screenshot-mode-active #filters-panel,
+body.screenshot-mode-active #accuracy-dashboard,
+body.screenshot-mode-active .info-section {
     display: none !important;
 }
 
 body.screenshot-mode-active {
     padding-top: 20px;
-    background: #0b0f19;
+    background: #0b0f19 !important;
+}
+body.light-theme.screenshot-mode-active {
+    background: #f1f5f9 !important;
+}
+
+body.screenshot-mode-active .prediction-card {
+    background: #111625 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+body.light-theme.screenshot-mode-active .prediction-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    color: #0f172a !important;
+}
+
+body.light-theme.screenshot-mode-active .teams {
+    color: #0f172a !important;
+}
+
+body.light-theme.screenshot-mode-active .market-pill {
+    background: rgba(15, 23, 42, 0.03) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+body.light-theme.screenshot-mode-active .market-pill strong {
+    color: #0f172a !important;
 }
 
 body.screenshot-mode-active::before {
@@ -1320,7 +1351,7 @@ body.screenshot-mode-active::before {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--accent);
-    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+    text-shadow: 0 0 10px var(--accent-glow);
     margin-bottom: 25px;
     letter-spacing: 2px;
 }
@@ -1665,5 +1696,115 @@ body.light-theme .stat-label {
 body.light-theme .verdict-detail {
     color: var(--text) !important;
     border-top: 1px dashed var(--glass-border) !important;
+}
+
+body.light-theme .admin-btn {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+    color: rgba(15, 23, 42, 0.4) !important;
+}
+body.light-theme .admin-btn:hover {
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+/* --- Shimmer Loading Skeleton --- */
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 1.2rem;
+    width: 100%;
+}
+.skeleton-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+}
+.skeleton-card::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+body.light-theme .skeleton-card {
+    background: rgba(15, 23, 42, 0.02) !important;
+}
+body.light-theme .skeleton-card::after {
+    background: linear-gradient(90deg, transparent, rgba(15, 23, 42, 0.04), transparent) !important;
+}
+
+/* --- High Confidence Card Styles --- */
+.safest-pick-card {
+    border: 1.5px solid #10b981 !important;
+    background: rgba(16, 185, 129, 0.04) !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.08) !important;
+}
+.high-conf-card {
+    border: 1.5px solid var(--accent) !important;
+    background: rgba(0, 242, 255, 0.02) !important;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.06) !important;
+}
+.safest-pick-badge {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: #10b981;
+    color: #fff !important;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    margin-right: 5px;
+    display: inline-block;
+}
+.high-conf-badge {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: var(--accent);
+    color: #0b0f19 !important;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    margin-right: 5px;
+    display: inline-block;
+}
+body.light-theme .high-conf-badge {
+    color: #fff !important;
+}
+body.light-theme .safest-pick-card {
+    background: rgba(16, 185, 129, 0.05) !important;
+}
+body.light-theme .high-conf-card {
+    background: rgba(2, 132, 199, 0.04) !important;
+}
+
+/* --- Filters Select Control Panel --- */
+.filters-panel select {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text) !important;
+    outline: none;
+    transition: all 0.3s ease;
+}
+.filters-panel select:hover {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 10px var(--accent-glow) !important;
+}
+body.light-theme .filters-panel select {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.12) !important;
+    color: #0f172a !important;
+}
+body.light-theme .filters-panel select:hover {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 10px var(--accent-glow) !important;
 }
 

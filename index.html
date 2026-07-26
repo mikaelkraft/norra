@@ -38,6 +38,7 @@
         </div>
         <div class="nav-actions">
             <button onclick="toggleTheme()" class="theme-toggle-btn">🌓 Theme</button>
+            <button id="btn-pwa-notify" class="theme-toggle-btn" onclick="requestNotificationAccess()" style="display: none; padding: 0.3rem 0.65rem; border-radius: 20px; font-size: 0.65rem; align-items: center; gap: 4px;">🔔 Alerts</button>
             <button onclick="promptAdminAccess()" class="admin-btn">Admin Only</button>
             <div class="status-badge"><span class="pulse"></span> Beacon Active</div>
         </div>
@@ -46,7 +47,7 @@
     <header>
         <h1>Global Prediction <span>Beacon</span></h1>
         <p>Near-perfect mathematical forecasts for football fans worldwide. Powered by the Beacon Force Algorithm.</p>
-        <div class="last-sync">System Last Synced: <span id="last-updated">...</span></div>
+        <div class="last-sync" id="last-sync-container" style="display: none;">System Last Synced: <span id="last-updated">...</span></div>
     </header>
 
     <div class="view-toggle-container">
@@ -84,7 +85,7 @@
     </div>
 
     <!-- Daily Statistics Widget -->
-    <div id="stats-widget-container" class="stats-widget-container">
+    <div id="stats-widget-container" class="stats-widget-container" style="display: none;">
         <div class="stats-widget">
             <div class="stats-widget-item">
                 <div id="stats-total-games" class="stats-widget-num">-</div>
@@ -110,6 +111,21 @@
         <input type="text" id="search-input" class="search-input" placeholder="🔍 Search by team, league, or country...">
     </div>
 
+    <!-- Advanced Filter Control Panel -->
+    <div id="filters-panel" class="filters-panel" style="display: flex; gap: 12px; justify-content: center; margin: -0.5rem auto 1.5rem; max-width: 600px; padding: 0 10px; flex-wrap: wrap;">
+        <select id="filter-confidence" onchange="applyFilters()" style="flex: 1; min-width: 140px; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-family: 'Orbitron', sans-serif; cursor: pointer; outline: none; transition: border-color 0.2s;">
+            <option value="all">All Confidences</option>
+            <option value="70">🔥 Top Picks (>70%)</option>
+            <option value="80">⭐ Safe Picks (>80%)</option>
+        </select>
+        <select id="filter-market" onchange="applyFilters()" style="flex: 1; min-width: 140px; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-family: 'Orbitron', sans-serif; cursor: pointer; outline: none; transition: border-color 0.2s;">
+            <option value="all">All Markets</option>
+            <option value="winner">Winner / Double Chance</option>
+            <option value="goals">Goal Lines (O/U)</option>
+            <option value="btts">Both Teams to Score</option>
+        </select>
+    </div>
+
     <!-- Action buttons for sharing daily summary & screenshotting -->
     <div class="action-buttons-container" style="display: flex; gap: 10px; max-width: 1200px; margin: 10px auto; padding: 0 20px; justify-content: flex-end;">
         <button id="btn-share-summary" class="action-btn" onclick="shareDailySummary()" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); color: #38bdf8; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 600; font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 6px;">
@@ -121,11 +137,38 @@
     </div>
 
     <main id="prediction-grid">
-        <!-- Predictions will be injected here -->
-        <div class="loading">Aligning Beacon Sensors...</div>
+        <!-- Predictions Shimmer Loading Skeleton -->
+        <div id="loading-skeleton" class="skeleton-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
     </main>
 
     <div id="pagination-container" class="pagination-container"></div>
+
+    <!-- Dynamic Accuracy & Resolution Dashboard -->
+    <section id="accuracy-dashboard" class="transparency-section" style="max-width: 1200px; margin: 3rem auto; padding: 0 20px; text-align: center; display: none;">
+        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--accent); margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 10px var(--accent-glow);">📊 Dynamic Accuracy & Resolution Dashboard</h3>
+        <div class="stats-widget">
+            <div class="stats-widget-item" style="border-right: 1px solid var(--glass-border);">
+                <div id="stats-winrate-30" class="stats-widget-num" style="color: #10b981;">-</div>
+                <div class="stats-widget-lbl">All-Time Accuracy</div>
+            </div>
+            <div class="stats-widget-item" style="border-right: 1px solid var(--glass-border);">
+                <div id="stats-winrate-7" class="stats-widget-num" style="color: #10b981;">-</div>
+                <div class="stats-widget-lbl">Last 7 Days Win Rate</div>
+            </div>
+            <div class="stats-widget-item" style="border-right: 1px solid var(--glass-border);">
+                <div id="stats-resolved-count" class="stats-widget-num">-</div>
+                <div class="stats-widget-lbl">Resolved Picks</div>
+            </div>
+            <div class="stats-widget-item">
+                <div id="stats-yield" class="stats-widget-num" style="color: #00f2ff;">-</div>
+                <div class="stats-widget-lbl">Estimated Yield (ROI)</div>
+            </div>
+        </div>
+    </section>
 
     <!-- Cookie Notice Banner -->
     <div id="cookie-banner" class="cookie-banner">
@@ -163,7 +206,7 @@
                 <span class="chat-close" onclick="toggleChat()">&times;</span>
             </div>
             <div class="chat-messages" id="chat-messages">
-                <div class="message bot-msg">Hello! I am your Norra AI Assistant. Ask me anything about our predictions, stats, or supported leagues!</div>
+                <div class="message bot-msg">Hello! I am your Norra AI Assistant. Ask me anything about today's picks, our accuracy record, or supported leagues!</div>
             </div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" placeholder="Type a question..." onkeydown="handleChatKey(event)">
@@ -173,12 +216,21 @@
     </div>
 
     <!-- Sponsors & Partner Network Ads -->
-    <section class="ads-section">
+    <section class="ads-section" style="display: none;">
         <div class="ads-widget-card">
-            <div class="ads-header-lbl">Network Partners & Sponsorship</div>
-            <div class="ads-placeholder">
-                Advertising Space - Partner Networks & AdSense integration placeholder.
-            </div>
+            <div class="ads-header-lbl">Ads</div>
+            <div class="ads-placeholder"></div>
+        </div>
+    </section>
+
+    <!-- How it Works & Disclaimers -->
+    <section class="info-section" style="max-width: 800px; margin: 4rem auto; padding: 0 20px; text-align: center; font-family: 'Inter', sans-serif; line-height: 1.7;">
+        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-glow);">📡 How Beacon Force V4 Works</h3>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 1.5rem; text-align: justify;">
+            Norra AI leverages five dedicated Machine Learning classifiers trained on historical league standings, average goals, and head-to-head metrics. The **Beacon Force V4 Algorithm** weights team momentum, defensive stress, and home field advantage to forecast match outcomes. For volatile leagues (such as Swedish, Norwegian, or Chinese divisions), the engine automatically pivots to highly stable goal lines and BTTS selections to ensure consistent predictability.
+        </p>
+        <div style="font-size: 0.72rem; opacity: 0.6; font-style: italic; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+            Disclaimer: All predictions are mathematically calculated estimations for entertainment and educational purposes only. Sports betting carries financial risk. Norra AI accepts no liability for losses. Play responsibly (18+).
         </div>
     </section>
 
