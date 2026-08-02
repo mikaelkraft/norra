@@ -1808,3 +1808,219 @@ body.light-theme .filters-panel select:hover {
     box-shadow: 0 0 10px var(--accent-glow) !important;
 }
 
+/* --- Social Media Icons --- */
+.social-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-bright);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.social-icon-btn:hover {
+    background: var(--accent);
+    color: #0b0f19;
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* --- Floating Accumulator Bet Slip Widget --- */
+.bet-slip-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 340px;
+    max-width: calc(100vw - 40px);
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--accent);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-glow);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bet-slip-widget.hidden {
+    display: none;
+}
+.bet-slip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(0, 242, 255, 0.12);
+    border-bottom: 1px solid var(--glass-border);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.slip-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-bright);
+}
+.slip-total-odds {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+.slip-toggle-arrow {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+}
+.bet-slip-body {
+    padding: 14px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.bet-slip-body.hidden {
+    display: none;
+}
+.preset-buttons-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.preset-btn {
+    flex: 1;
+    padding: 6px 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.preset-btn:hover {
+    background: var(--accent);
+    color: #0b0f19;
+}
+.preset-btn.clear-btn:hover {
+    background: #ef4444;
+    color: white;
+}
+.slip-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.slip-item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+    font-size: 0.8rem;
+}
+.slip-item-remove {
+    cursor: pointer;
+    color: #ef4444;
+    font-weight: bold;
+    margin-left: 8px;
+}
+.stake-sim-container {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+.share-slip-btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, var(--accent), #3b82f6);
+    color: #0b0f19;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.share-slip-btn:hover {
+    opacity: 0.9;
+}
+
+/* --- Sticky PWA Install Banner --- */
+.pwa-install-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 999;
+    width: 320px;
+    max-width: calc(100vw - 40px);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+.pwa-install-banner.hidden {
+    display: none;
+}
+.pwa-content h4 {
+    margin: 0 0 2px 0;
+    font-size: 0.85rem;
+    color: var(--text-bright);
+}
+.pwa-content p {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.pwa-install-btn {
+    padding: 6px 14px;
+    background: var(--accent);
+    color: #0b0f19;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+.pwa-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+/* --- Selection Trigger on Prediction Cards --- */
+.card-pick-selectable {
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.card-pick-selectable:hover {
+    transform: scale(1.02);
+    border-color: var(--accent);
+}
+.card-pick-selectable.selected-in-slip {
+    background: rgba(0, 242, 255, 0.18) !important;
+    border: 1px solid var(--accent) !important;
+}
+
+

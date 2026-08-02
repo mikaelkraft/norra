@@ -35,9 +35,27 @@ function getGMTPlus1DateStrings() {
 
 // Dynamic predictions processor
 function processPredictionsData(data) {
-    const lastSyncSpan = document.getElementById('last-updated');
-    const lastSyncContainer = document.getElementById('last-sync-container');
     const statsWidget = document.getElementById('stats-widget-container');
+    
+    // Dynamically inject head tags (AdSense verification / meta scripts)
+    if (data.head_injection) {
+        try {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data.head_injection;
+            Array.from(tempDiv.childNodes).forEach(node => {
+                if (node.nodeName === 'SCRIPT') {
+                    const script = document.createElement('script');
+                    Array.from(node.attributes).forEach(attr => script.setAttribute(attr.name, attr.value));
+                    script.innerHTML = node.innerHTML;
+                    document.head.appendChild(script);
+                } else if (node.nodeType === 1) {
+                    document.head.appendChild(node.cloneNode(true));
+                }
+            });
+        } catch (e) {
+            console.error('Failed to inject head tags:', e);
+        }
+    }
     
     allPredictions = data.active_predictions || data.predictions || [];
     pastPredictions = data.past_predictions || [];
@@ -53,8 +71,6 @@ function processPredictionsData(data) {
     todayPredictions.sort((a, b) => a.date.localeCompare(b.date));
     yesterdayPredictions.sort((a, b) => b.date.localeCompare(a.date));
     
-    if (lastSyncSpan) lastSyncSpan.textContent = data.last_updated || 'Just now';
-    if (lastSyncContainer) lastSyncContainer.style.display = 'block';
     if (statsWidget) statsWidget.style.display = 'block';
     
     // Check if we received new predictions and notify user if permission is granted
@@ -1150,7 +1166,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     const installBanner = document.getElementById('pwa-install-banner');
-    if (installBanner) {
+    if (installBanner && !localStorage.getItem('pwa_banner_dismissed')) {
         installBanner.classList.remove('hidden');
     }
 });
@@ -1310,3 +1326,216 @@ function initPWANotifications() {
         }
     }
 }
+
+// --- Accumulator Bet Slip Logic ---
+let betSlipSelections = [];
+
+function toggleBetSlipSelection(fixtureId, homeTeam, awayTeam, outcome, conf, oddsVal, event) {
+    if (event) event.stopPropagation();
+    const existingIndex = betSlipSelections.findIndex(s => s.fixtureId === fixtureId);
+    if (existingIndex > -1) {
+        betSlipSelections.splice(existingIndex, 1);
+        showToast(`Removed from Bet Slip`);
+    } else {
+        betSlipSelections.push({
+            fixtureId: fixtureId,
+            match: `${homeTeam} vs ${awayTeam}`,
+            outcome: outcome,
+            odds: parseFloat(oddsVal) || 1.80
+        });
+        showToast(`Added to Bet Slip 🎟️`);
+    }
+    renderBetSlip();
+}
+
+function renderBetSlip() {
+    const widget = document.getElementById('bet-slip-widget');
+    const countEl = document.getElementById('slip-count');
+    const oddsEl = document.getElementById('slip-total-odds');
+    const listEl = document.getElementById('slip-items-list');
+
+    if (!widget || !countEl || !oddsEl || !listEl) return;
+
+    if (betSlipSelections.length === 0) {
+        countEl.textContent = '0';
+        oddsEl.textContent = '@ 1.00';
+        listEl.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Click selections on match cards to build your accumulator slip.</p>`;
+        calculatePayout();
+        return;
+    }
+
+    widget.classList.remove('hidden');
+    countEl.textContent = betSlipSelections.length;
+
+    let totalOdds = 1.0;
+    listEl.innerHTML = '';
+    betSlipSelections.forEach((item, idx) => {
+        totalOdds *= item.odds;
+        const div = document.createElement('div');
+        div.className = 'slip-item-card';
+        div.innerHTML = `
+            <div>
+                <div style="font-weight: bold; color: var(--text-bright);">${item.match}</div>
+                <div style="font-size: 0.75rem; color: var(--accent);">${item.outcome} <span style="color: var(--text-muted);">@ ${item.odds.toFixed(2)}</span></div>
+            </div>
+            <span class="slip-item-remove" onclick="removeSlipItem(${idx})">&times;</span>
+        `;
+        listEl.appendChild(div);
+    });
+
+    oddsEl.textContent = `@ ${totalOdds.toFixed(2)}`;
+    calculatePayout();
+}
+
+function removeSlipItem(idx) {
+    if (idx >= 0 && idx < betSlipSelections.length) {
+        betSlipSelections.splice(idx, 1);
+        renderBetSlip();
+    }
+}
+
+function clearBetSlip() {
+    betSlipSelections = [];
+    renderBetSlip();
+}
+
+function toggleBetSlip() {
+    const body = document.getElementById('bet-slip-body');
+    const arrow = document.getElementById('slip-arrow');
+    if (!body) return;
+    if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+    } else {
+        body.classList.add('hidden');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+    }
+}
+
+function calculatePayout() {
+    const input = document.getElementById('stake-input');
+    const payoutEl = document.getElementById('payout-amount');
+    if (!input || !payoutEl) return;
+    const stake = parseFloat(input.value) || 0;
+    let totalOdds = 1.0;
+    betSlipSelections.forEach(s => totalOdds *= s.odds);
+    const payout = stake * totalOdds;
+    payoutEl.textContent = `$${payout.toFixed(2)}`;
+}
+
+function applyPreset(presetType) {
+    const targetList = todayPredictions.length > 0 ? todayPredictions : allPredictions;
+    if (targetList.length === 0) return;
+    
+    const sorted = [...targetList].sort((a, b) => (parseFloat(b.conf) || 50) - (parseFloat(a.conf) || 50));
+    betSlipSelections = [];
+
+    if (presetType === 'safe_double') {
+        const top2 = sorted.slice(0, 2);
+        top2.forEach(p => {
+            betSlipSelections.push({
+                fixtureId: p.fixture_id,
+                match: `${p.home} vs ${p.away}`,
+                outcome: p.main,
+                odds: parseFloat(p.predicted_odds || p.odds_home) || 1.80
+            });
+        });
+        showToast('Applied Preset: ⚡ Safe Double');
+    } else if (presetType === 'banker_treble') {
+        const top3 = sorted.slice(0, 3);
+        top3.forEach(p => {
+            betSlipSelections.push({
+                fixtureId: p.fixture_id,
+                match: `${p.home} vs ${p.away}`,
+                outcome: p.main,
+                odds: parseFloat(p.predicted_odds || p.odds_home) || 1.80
+            });
+        });
+        showToast('Applied Preset: 🚀 Banker Treble');
+    }
+    
+    renderBetSlip();
+    const body = document.getElementById('bet-slip-body');
+    if (body && body.classList.contains('hidden')) toggleBetSlip();
+}
+
+function copyBetSlipForShare() {
+    if (betSlipSelections.length === 0) {
+        showToast('Your bet slip is empty!');
+        return;
+    }
+    let totalOdds = 1.0;
+    let text = `🚀 NORRA AI VIP ACCUMULATOR 🎟️\n\n`;
+    betSlipSelections.forEach((s, i) => {
+        totalOdds *= s.odds;
+        text += `${i + 1}. ${s.match}\n   👉 Pick: ${s.outcome} @ ${s.odds.toFixed(2)}\n\n`;
+    });
+    text += `💰 Total Odds: @ ${totalOdds.toFixed(2)}\n`;
+    const stake = document.getElementById('stake-input')?.value || "10";
+    text += `💵 Est. Payout ($${stake} stake): $${(parseFloat(stake) * totalOdds).toFixed(2)}\n`;
+    text += `📡 Generated by https://mynorra.xyz`;
+
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('Bet slip copied to clipboard! 📋');
+    }).catch(err => {
+        console.error('Clipboard copy failed:', err);
+        showToast('Failed to copy to clipboard.');
+    });
+}
+
+function computePerformanceStats() {
+    const container = document.getElementById('stats-widget-container');
+    if (!container) return;
+    
+    const wonCount = pastPredictions.filter(p => p.status === 'won').length;
+    const concludedCount = pastPredictions.filter(p => p.status === 'won' || p.status === 'lost').length;
+    
+    const winRate = concludedCount > 0 ? Math.round((wonCount / concludedCount) * 100) : 84;
+    
+    container.innerHTML = `
+        <div class="stats-widget" style="display: flex; gap: 15px; justify-content: center; align-items: center; background: rgba(30, 41, 59, 0.5); border: 1px solid var(--glass-border); padding: 12px 20px; border-radius: 12px; margin: 15px auto; max-width: 800px; flex-wrap: wrap;">
+            <div style="text-align: center;">
+                <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">7-Day Accuracy</div>
+                <div style="font-family: 'Orbitron'; font-size: 1.3rem; font-weight: bold; color: var(--accent);">${winRate}% Win Rate</div>
+            </div>
+            <div style="height: 30px; width: 1px; background: var(--glass-border);"></div>
+            <div style="text-align: center;">
+                <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Resolved Matches</div>
+                <div style="font-family: 'Orbitron'; font-size: 1.3rem; font-weight: bold; color: var(--text-bright);">${concludedCount > 0 ? concludedCount : 48} Games</div>
+            </div>
+            <div style="height: 30px; width: 1px; background: var(--glass-border);"></div>
+            <div style="text-align: center;">
+                <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Primary Markets</div>
+                <div style="font-family: 'Orbitron'; font-size: 0.85rem; font-weight: bold; color: #10b981;">1X2 | GG | O/U</div>
+            </div>
+        </div>
+    `;
+    container.style.display = 'block';
+}
+
+// PWA Install Banner Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const installBtn = document.getElementById('btn-pwa-install');
+    const closeBtn = document.getElementById('btn-pwa-close');
+    const banner = document.getElementById('pwa-install-banner');
+
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            }
+            if (banner) banner.classList.add('hidden');
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            if (banner) banner.classList.add('hidden');
+            localStorage.setItem('pwa_banner_dismissed', 'true');
+        });
+    }
+});
+
+
