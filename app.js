@@ -63,7 +63,7 @@ function processPredictionsData(data) {
     const dates = getGMTPlus1DateStrings();
     const combined = [...allPredictions, ...pastPredictions];
     
-    todayPredictions = combined.filter(p => p.date.startsWith(dates.today) || (p.status === 'pending' && p.date >= dates.today));
+    todayPredictions = combined.filter(p => p.status === 'pending' || p.date.startsWith(dates.today));
     yesterdayPredictions = combined.filter(p => p.date.startsWith(dates.yesterday));
     archivePredictions = combined.filter(p => !p.date.startsWith(dates.today) && !p.date.startsWith(dates.yesterday) && p.date < dates.yesterday);
     
@@ -127,6 +127,19 @@ async function fetchPredictions(retryCount = 0) {
         }
     }
     
+    // If we have zero cached predictions, show cold-start warmup UI while fetching
+    if (allPredictions.length === 0 && grid) {
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; font-family: 'Inter', sans-serif;">
+                <div style="display: inline-block; width: 44px; height: 44px; border: 3px solid rgba(0, 242, 255, 0.15); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.2rem;"></div>
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--accent); margin: 0 0 0.5rem 0; font-size: 1.1rem;">Connecting to Prediction Beacon</h3>
+                <p style="opacity: 0.75; max-width: 420px; margin: 0 auto; font-size: 0.85rem; line-height: 1.5;">
+                    ${retryCount > 0 ? `Warming up server backend... (Attempt ${retryCount + 1}/8)` : 'Initializing ML classifiers and syncing live match data...'}
+                </p>
+            </div>
+        `;
+    }
+    
     try {
         const response = await fetch(`${BACKEND_URL}/predictions`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -139,18 +152,18 @@ async function fetchPredictions(retryCount = 0) {
     } catch (err) {
         console.error('Beacon fetch error:', err);
         
-        if (retryCount < 3) {
-            console.log(`Retrying fetch in 5 seconds (attempt ${retryCount + 1}/3)...`);
+        if (retryCount < 8) {
+            console.log(`Retrying fetch in 5 seconds (attempt ${retryCount + 1}/8)...`);
             setTimeout(() => fetchPredictions(retryCount + 1), 5000);
         } else {
             // Show custom error only if we have zero data to display
-            if (allPredictions.length === 0) {
+            if (allPredictions.length === 0 && grid) {
                 grid.innerHTML = `
                     <div class="error-state" style="text-align: center; padding: 4rem 1rem;">
                         <div style="font-size: 2.5rem; margin-bottom: 1rem;">📡</div>
-                        <h3 style="font-family: 'Orbitron'; color: var(--accent); margin-bottom: 0.5rem;">Beacon Offline</h3>
-                        <p style="opacity: 0.7; max-width: 400px; margin: 0 auto 1.5rem; font-size: 0.85rem;">The prediction backend is currently warming up. This usually takes about 30 seconds.</p>
-                        <button onclick="fetchPredictions(0)" class="page-btn" style="background: var(--accent); color: var(--bg-dark);">Retry Connection</button>
+                        <h3 style="font-family: 'Orbitron'; color: var(--accent); margin-bottom: 0.5rem;">Beacon Connection Timeout</h3>
+                        <p style="opacity: 0.7; max-width: 400px; margin: 0 auto 1.5rem; font-size: 0.85rem;">The prediction server took longer than usual to wake up. Tap below to re-connect.</p>
+                        <button onclick="fetchPredictions(0)" class="page-btn" style="background: var(--accent); color: var(--bg-dark); font-weight: bold; padding: 10px 20px;">Retry Connection 🔄</button>
                     </div>
                 `;
             } else {
