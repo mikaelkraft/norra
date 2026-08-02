@@ -73,19 +73,37 @@ function processPredictionsData(data) {
     
     if (statsWidget) statsWidget.style.display = 'block';
     
-    // Check if we received new predictions and notify user if permission is granted
-    const previousTotal = localStorage.getItem('last_prediction_count');
-    const currentTotal = todayPredictions.length;
-    if (previousTotal !== null && parseInt(previousTotal) < currentTotal) {
-        const newCount = currentTotal - parseInt(previousTotal);
-        if ('Notification' in window && Notification.permission === 'granted') {
+    // Trigger Daily System Alert Notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+        const lastNotifiedDate = localStorage.getItem('last_notified_date');
+        const previousTotal = localStorage.getItem('last_prediction_count');
+        const currentTotal = todayPredictions.length;
+
+        // 1. Everyday Daily Alert Trigger (fires once every day)
+        if (lastNotifiedDate !== dates.today && currentTotal > 0) {
+            const topPicksCount = todayPredictions.filter(p => (parseInt(p.conf) || 50) >= 75).length;
+            const bodyText = topPicksCount > 0 
+                ? `${currentTotal} AI predictions live for today (including ${topPicksCount} Top Beacon Picks)!` 
+                : `${currentTotal} high-precision mathematical forecasts are live for today!`;
+                
+            new Notification(`📡 Today's Norra AI Beacon Picks (${dates.today})`, {
+                body: bodyText,
+                icon: 'norraai.png',
+                tag: 'daily-norra-alert'
+            });
+            localStorage.setItem('last_notified_date', dates.today);
+        } 
+        // 2. Intra-day Fresh Predictions Update Trigger
+        else if (previousTotal !== null && parseInt(previousTotal) < currentTotal) {
+            const newCount = currentTotal - parseInt(previousTotal);
             new Notification('📡 New Predictions Synced', {
                 body: `${newCount} new high-precision forecasts are now live!`,
-                icon: 'norraai.png'
+                icon: 'norraai.png',
+                tag: 'intraday-norra-sync'
             });
         }
+        localStorage.setItem('last_prediction_count', currentTotal);
     }
-    localStorage.setItem('last_prediction_count', currentTotal);
     
     renderFilters();
     renderGrid();
@@ -795,8 +813,27 @@ function setYesterdayLabel() {
     btnYest.textContent = `📅 ${weekday}, ${dateStr}`;
 }
 
+const APP_VERSION = 'norra-v3.1';
+
+function checkAppVersionPurge() {
+    const storedVersion = localStorage.getItem('norra_app_version');
+    if (storedVersion !== APP_VERSION) {
+        console.log(`App update detected (${storedVersion || 'legacy'} -> ${APP_VERSION}). Purging stale storage...`);
+        localStorage.removeItem('cached_predictions');
+        localStorage.setItem('norra_app_version', APP_VERSION);
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+        }
+    }
+}
+
 // Fetch on load
 document.addEventListener('DOMContentLoaded', () => {
+    checkAppVersionPurge();
     initTheme();
     fetchPredictions();
     setYesterdayLabel();
@@ -838,9 +875,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Register Service Worker for PWA Support
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registered successfully:', reg.scope))
-                .catch(err => console.error('Service Worker registration failed:', err));
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('Service Worker registered successfully:', reg.scope);
+                
+                // Force check for updates on register
+                reg.update();
+
+                reg.onupdatefound = () => {
+                    const installingWorker = reg.installing;
+                    if (installingWorker) {
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('New version installed. Reloading for fresh UI...');
+                                if (typeof showToast === 'function') {
+                                    showToast('🚀 Norra AI Updated! Reloading fresh UI...', 'success');
+                                }
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1200);
+                            }
+                        };
+                    }
+                };
+            }).catch(err => console.error('Service Worker registration failed:', err));
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
         });
     }
 
@@ -900,8 +965,7 @@ function sharePrediction(home, away, main, conf, event) {
     if (navigator.share) {
         navigator.share({
             title: `NorraAI Prediction: ${home} vs ${away}`,
-            text: text,
-            url: 'https://mynorra.xyz'
+            text: text
         }).then(() => {
             console.log('Successfully shared prediction');
         }).catch((err) => {
@@ -954,8 +1018,7 @@ function shareDailySummary() {
     if (navigator.share) {
         navigator.share({
             title: `NorraAI Daily Picks Summary`,
-            text: text,
-            url: 'https://mynorra.xyz'
+            text: text
         }).then(() => {
             console.log('Successfully shared summary sheet');
         }).catch((err) => {

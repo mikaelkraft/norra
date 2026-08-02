@@ -1,4 +1,4 @@
-const CACHE_NAME = 'norra-ai-cache-v2';
+const CACHE_NAME = 'norra-ai-cache-v3';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -26,6 +26,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
+            console.log('[SW] Purging stale cache:', cache);
             return caches.delete(cache);
           }
         })
@@ -45,21 +46,46 @@ self.addEventListener('fetch', (event) => {
     return event.respondWith(fetch(event.request));
   }
 
-  // Stale-While-Revalidate caching strategy for static assets
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Fetch fresh asset in the background and update the cache
-        fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
-            }
-          })
-          .catch(() => { /* ignore background fetch errors when offline */ });
-        return cachedResponse;
-      }
-      return fetch(event.request);
-    })
-  );
+  const url = new URL(event.request.url);
+  const isCoreAsset = url.pathname.endsWith('index.html') || 
+                      url.pathname.endsWith('app.js') || 
+                      url.pathname.endsWith('style.css') || 
+                      url.pathname === '/' || 
+                      url.pathname === '';
+
+  if (isCoreAsset) {
+    // Network-First Strategy for core app files to guarantee users get the newest UI immediately
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // Fallback to cache when network is offline
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Stale-While-Revalidate strategy for secondary static assets (images, icons)
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          fetch(event.request)
+            .then((networkResponse) => {
+              if (networkResponse.status === 200) {
+                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+              }
+            })
+            .catch(() => { /* ignore offline errors for background revalidation */ });
+          return cachedResponse;
+        }
+        return fetch(event.request);
+      })
+    );
+  }
 });
+
