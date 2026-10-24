@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Fixture Not Found | Norra AI</title>
+    <link rel="canonical" href="https://mynorra.xyz/404.html">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#0b0f19">
+    <link rel="icon" type="image/png" href="/assets/norraai.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #07090e;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(0, 242, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(112, 0, 255, 0.06) 0%, transparent 50%);
+            color: #f8fafc;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow-x: hidden;
+        }
+        .error-card {
+            max-width: 580px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            padding: 48px 36px;
+            border-radius: 24px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 242, 255, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .error-code {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(4.5rem, 12vw, 7rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #00f2ff 0%, #7000ff 50%, #ff007a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(0, 242, 255, 0.4);
+            margin-bottom: 12px;
+        }
+        .error-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(0, 242, 255, 0.12);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 999px;
+            color: #00f2ff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.3rem, 4vw, 1.75rem);
+            color: #ffffff;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+        p {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            line-height: 1.65;
+            margin-bottom: 32px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+        @media (min-width: 480px) {
+            .btn-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #00f2ff 0%, #0284c7 100%);
+            color: #04121e;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(0, 242, 255, 0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 26px rgba(0, 242, 255, 0.55);
+        }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(51, 65, 85, 0.8);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .quick-links {
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.82rem;
+        }
+        .quick-links a {
+            color: #64748b;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .quick-links a:hover {
+            color: #00f2ff;
+        }
+    </style>
+</head>
+<body>
+    <main class="error-card">
+        <div class="error-badge">VAR Check: Out of Bounds</div>
+        <div class="error-code">404</div>
+        <h1>Fixture Not Found</h1>
+        <p>The match, statistic line, or URL you were looking for doesn't exist or has concluded its session. Return to today's active algorithmic predictions.</p>
+        <div class="btn-group">
+            <a href="/" class="btn-primary">⚡ View Today's Bankers</a>
+            <a href="https://t.me/norra_ai" target="_blank" rel="noopener" class="btn-secondary">💬 Join Telegram VIP</a>
+        </div>
+        <div class="quick-links">
+            <a href="/">Home</a>
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/sitemap.xml">Sitemap</a>
+        </div>
+    </main>
+</body>
+</html>
