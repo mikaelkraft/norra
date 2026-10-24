@@ -111,4 +111,4 @@ If you or someone you know is affected by gambling, free and confidential suppor
 
 ## 📄 License & Intellectual Property
 
-This project is open-sourced under the [MIT License](LICENSE). Unauthorized scraping, automated mass harvesting, or redistribution of proprietary prediction feeds is prohibited under platform terms.
+This project is close-sourced. Unauthorized scraping, automated mass harvesting, or redistribution of proprietary prediction feeds is prohibited under platform terms.
