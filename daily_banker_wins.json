@@ -1,0 +1,191 @@
+[
+  {
+    "id": "banker_win_2026-10-17",
+    "raw_date": "2026-10-17",
+    "date_str": "Oct 17, 2026",
+    "title": "VIP Banker Ticket (Oct 17, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.1,
+    "legs": [
+      {
+        "home": "Atlanta United FC",
+        "away": "Inter Miami CF",
+        "pick": "Both Teams to Score (GG)",
+        "odds": 1.45,
+        "score": "1-3",
+        "status": "won"
+      },
+      {
+        "home": "New York City FC",
+        "away": "LAFC",
+        "pick": "Both Teams to Score (GG)",
+        "odds": 1.45,
+        "score": "1-1",
+        "status": "won"
+      }
+    ]
+  },
+  {
+    "id": "banker_win_2026-10-16",
+    "raw_date": "2026-10-16",
+    "date_str": "Oct 16, 2026",
+    "title": "VIP Banker Ticket (Oct 16, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.1,
+    "legs": [
+      {
+        "home": "Burnley",
+        "away": "Wolverhampton Wanderers",
+        "pick": "Wolverhampton Wanderers FC Draw No Bet (2 DNB)",
+        "odds": 1.42,
+        "score": "1-2",
+        "status": "won"
+      },
+      {
+        "home": "RC Deportivo La Coruña",
+        "away": "Levante UD",
+        "pick": "RC Deportivo La Coruña Draw No Bet (1 DNB)",
+        "odds": 1.48,
+        "score": "1-1",
+        "status": "won"
+      }
+    ]
+  },
+  {
+    "id": "banker_win_2026-10-15",
+    "raw_date": "2026-10-15",
+    "date_str": "Oct 15, 2026",
+    "title": "VIP Banker Ticket (Oct 15, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.11,
+    "legs": [
+      {
+        "home": "Internacional de Bogotá",
+        "away": "Llaneros FC",
+        "pick": "Internacional de Bogotá Win",
+        "odds": 1.7,
+        "score": "4-1",
+        "status": "won"
+      },
+      {
+        "home": "SK Brann",
+        "away": "Lincoln Red Imps",
+        "pick": "Over 1.5 Goals",
+        "odds": 1.24,
+        "score": "2-1",
+        "status": "won"
+      }
+    ]
+  },
+  {
+    "id": "banker_win_2026-10-14",
+    "raw_date": "2026-10-14",
+    "date_str": "Oct 14, 2026",
+    "title": "VIP Banker Ticket (Oct 14, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.2,
+    "legs": [
+      {
+        "home": "Columbus Crew",
+        "away": "Charlotte FC",
+        "pick": "Both Teams to Score (GG)",
+        "odds": 1.45,
+        "score": "3-1",
+        "status": "won"
+      },
+      {
+        "home": "FC Cincinnati",
+        "away": "New England Revolution",
+        "pick": "New England Revolution Win or Draw (X2)",
+        "odds": 1.52,
+        "score": "2-3",
+        "status": "won"
+      }
+    ]
+  },
+  {
+    "id": "banker_win_2026-10-13",
+    "raw_date": "2026-10-13",
+    "date_str": "Oct 13, 2026",
+    "title": "VIP Banker Ticket (Oct 13, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.25,
+    "legs": [
+      {
+        "home": "Brazil",
+        "away": "Argentina",
+        "pick": "Both Teams to Score (GG)",
+        "odds": 1.45,
+        "score": "2-2",
+        "status": "won"
+      },
+      {
+        "home": "United States",
+        "away": "Spain",
+        "pick": "Over 2.5 Goals",
+        "odds": 1.55,
+        "score": "2-2",
+        "status": "won"
+      }
+    ]
+  },
+  {
+    "id": "banker_win_2026-10-12",
+    "raw_date": "2026-10-12",
+    "date_str": "Oct 12, 2026",
+    "title": "VIP Banker Ticket (Oct 12, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.18,
+    "legs": [
+      {
+        "home": "Coventry City",
+        "away": "Newcastle United",
+        "pick": "Over 2.5 Goals",
+        "odds": 1.58,
+        "score": "4-1",
+        "status": "won"
+      },
+      {
+        "home": "Coritiba",
+        "away": "Botafogo",
+        "pick": "Under 3.5 Goals",
+        "odds": 1.38,
+        "score": "1-1",
+        "status": "won"
+      }
+    ]
+  },
+  {
+    "id": "banker_win_2026-10-11",
+    "raw_date": "2026-10-11",
+    "date_str": "Oct 11, 2026",
+    "title": "VIP Banker Ticket (Oct 11, 2026)",
+    "status": "won",
+    "is_today": false,
+    "combined_odds": 2.09,
+    "legs": [
+      {
+        "home": "St. Louis CITY SC",
+        "away": "LA Galaxy",
+        "pick": "Over 1.5 Goals",
+        "odds": 1.35,
+        "score": "6-2",
+        "status": "won"
+      },
+      {
+        "home": "Pachuca",
+        "away": "Necaxa",
+        "pick": "Pachuca Draw No Bet (1 DNB)",
+        "odds": 1.55,
+        "score": "3-3",
+        "status": "won"
+      }
+    ]
+  }
+]

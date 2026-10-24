@@ -1,0 +1,15 @@
+{
+  "name": "norra-ai",
+  "version": "2.0.0",
+  "description": "Norra AI Predictive Engine and Telegram Serverless Bot",
+  "type": "module",
+  "scripts": {
+    "tgcloud:login": "npx tgcloud login",
+    "tgcloud:status": "npx tgcloud status",
+    "tgcloud:push": "npx tgcloud push",
+    "tgcloud:migrate": "npx tgcloud migrate"
+  },
+  "devDependencies": {
+    "@tgcloud/cli": "^0.2.0"
+  }
+}

@@ -1,0 +1,42 @@
+# Norra AI (https://mynorra.xyz)
+
+> Norra AI is a state-of-the-art mathematical football intelligence and quantitative match forecast platform.
+
+Norra AI delivers daily football fixture predictions, expected goals (xG) analytics, team form ratings, squad strength metrics, simulated probability odds, and accumulator slips across 40+ global and domestic football leagues.
+
+## Core Capabilities
+- **Beacon Intelligence Prediction Engine**: Combines historical team match metrics, recent form, Poisson goal distribution, head-to-head records, home/away advantage weighting, and defensive ratings to generate deterministic outcome probabilities.
+- **Dynamic Multi-Market Hierarchy**: Provides predictions across Match Winner (1X2), Double Chance (1X, 12, X2), Both Teams to Score (GG / BTTS Yes / No), Over/Under Goals (Over 1.5, Under 2.5, Under 3.5), Draw No Bet (DNB), and High-Confidence Value Markets.
+- **Daily Banker Ticket Engine**: Aggregates mathematically sound, high-probability selections into optimal slips with verified odds and combined probability analytics.
+- **Global In-Play Telemetry & Live Verification**: Real-time scoreboard tracking cross-referenced with pre-match predictions, auto-resolving full-time outcomes to log verified win rates and transparent streaks.
+- **Norra AI Football Analyst**: Match tactical breakdowns, injury contexts, and historical matchup narratives.
+
+## Supported Competitions
+Norra AI monitors and analyzes fixtures across premier domestic competitions and continental tournaments worldwide:
+- **Europe**: Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie, Primeira Liga, Scottish Premiership, Belgian Pro League, Allsvenskan, Eliteserien, Swiss Super League, Austrian Bundesliga, Danish Superliga, EFL Championship, Segunda División, Serie B, 2. Bundesliga, Ligue 2.
+- **Continental Cups**: UEFA Champions League, UEFA Europa League, UEFA Conference League, CONMEBOL Copa Libertadores, CONMEBOL Copa Sudamericana, CONCACAF Champions Cup, CAF Champions League, AFC Champions League.
+- **Americas & Global**: Brasileirão Série A, Argentine Primera División, Liga MX, MLS, Saudi Pro League, J1 League, Chinese Super League, Copa do Brasil, Copa Argentina, FA Cup, Copa del Rey, DFB-Pokal, Coppa Italia, Coupe de France.
+
+## Public Web Pages & Endpoints
+- [Norra AI Homepage](https://mynorra.xyz/): Main interactive prediction portal, match cards, live filter tabs, and daily banker slips.
+- [How Norra AI Works](https://mynorra.xyz/how-it-works): Comprehensive overview of our quantitative modeling, probability analysis, and odds interpretation.
+- [Terms of Service](https://mynorra.xyz/terms): Platform usage terms, intellectual property protections, and responsible gaming guidelines.
+- [Privacy Policy](https://mynorra.xyz/privacy): Data protection, telemetry handling, and privacy standards.
+- [Sitemap](https://mynorra.xyz/sitemap.xml): XML sitemap for search engines and legitimate web crawlers.
+
+## Data Rights, Scraping Prohibition & Crawler Policy
+
+### 1. Prohibition on Automated Scraping and Data Harvesting
+- **No Unauthorized Scraping**: Automated data scraping, screen scraping, bulk data harvesting, automated mass querying, API extraction, or automated mirroring of Norra AI prediction feeds, algorithms, odds, and proprietary data is **strictly prohibited**.
+- **No Commercial Exploitation or Reselling**: Norra AI predictions, data structures, and analytics may not be copied, syndicated, resold, redistributed, or incorporated into commercial prediction platforms or syndicates without express prior written licensing from Norra AI.
+- **No Unauthorized AI Model Training**: Scraping, ingesting, or harvesting Norra AI predictions, algorithm outputs, or historical performance databases to train, pre-train, fine-tune, distill, or evaluate machine learning models, neural networks, or LLMs is strictly forbidden.
+
+### 2. Permitted Crawlers for Search Indexing, SEO & Attributed Search RAG
+- **Verified Search Crawlers**: Legitimate, verified search engine crawlers (including but not limited to Googlebot, Mediapartners-Google, Bingbot, Applebot, DuckDuckBot, YandexBot, and Baiduspider) are explicitly permitted and encouraged to crawl, index, and cache public Norra AI pages for search indexing and SEO ranking.
+- **Search-Grounded AI Agents & Answer Engines**: Retrieval-augmented search agents (such as Google Search Generative Experience, Perplexity AI, ChatGPT Search, Claude Search, and Microsoft Copilot) are authorized to access public content strictly for user-facing search queries, summaries, and citations, **provided that**:
+  1. Direct attribution and a clickable link to https://mynorra.xyz or the specific fixture page are visibly presented.
+  2. Crawl rates remain reasonable and comply with robots.txt limits.
+  3. Retrieved content is not stored in bulk or used for offline training datasets.
+
+## Responsible Gaming Notice
+Norra AI is purely a mathematical analytical tool intended for informational, statistical, and entertainment purposes for adult audiences aged 18+. Norra AI does not accept wagers or provide real-money gambling services. Play responsibly.

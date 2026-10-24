@@ -1,0 +1,4 @@
+{
+  "$schema": "https://core.telegram.org/bots/serverless/tgcloud.json",
+  "name": "norra-ai"
+}

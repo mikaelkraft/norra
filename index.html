@@ -4,29 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Norra AI | The Prediction Beacon Force</title>
-    <link rel="icon" type="image/png" href="norraai.png">
+    <link rel="icon" type="image/png" href="assets/norraai.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0a0b10">
-    <link rel="apple-touch-icon" href="norraai.png">
-    <link rel="apple-touch-startup-image" href="splash.png">
-    
-    <!-- Open Graph / social sharing meta tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Norra AI">
+    <link rel="apple-touch-icon" href="assets/norraai.png">
+    <link rel="apple-touch-startup-image" href="assets/splash.png">
+    <link rel="canonical" href="https://mynorra.xyz/">
+    <script>
+        if (window.location.hostname.endsWith('.pages.dev') || window.location.hostname.endsWith('vercel.app')) {
+            window.location.replace('https://mynorra.xyz' + window.location.pathname + window.location.search + window.location.hash);
+        }
+    </script>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Norra AI">
+    <meta property="og:url" content="https://mynorra.xyz/">
     <meta property="og:title" content="Norra AI | The Prediction Beacon Force">
     <meta property="og:description" content="Near-perfect mathematical forecasts for football fans worldwide. Powered by the Beacon Force Algorithm.">
-    <meta property="og:image" content="https://mynorra.xyz/norraai.png">
-    <meta property="og:url" content="https://mynorra.xyz/">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://mynorra.xyz/assets/analysis_hero.png">
+    <meta property="og:image:secure_url" content="https://mynorra.xyz/assets/analysis_hero.png">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Norra AI Football Predictions Beacon Force">
     
-    <link rel="stylesheet" href="style.css">
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mynorra.xyz/">
+    <meta name="twitter:title" content="Norra AI | The Prediction Beacon Force">
+    <meta name="twitter:description" content="Near-perfect mathematical forecasts for football fans worldwide. Powered by the Beacon Force Algorithm.">
+    <meta name="twitter:image" content="https://mynorra.xyz/assets/analysis_hero.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="style.css?v=3.2.13" as="style">
+    <link rel="preload" href="assets/norraai.png" as="image">
+    
+    <link rel="stylesheet" href="style.css?v=3.2.13">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Telegram WebApp & Monetag Telegram Mini App Ads SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://libtl.com/sdk.js" data-zone="11686636" data-sdk="show_11686636"></script>
+    
+    <meta name="description" content="Norra AI: Near-perfect mathematical football predictions, daily sure banker bets, AI soccer forecasts, 1X2, Double Chance, Over 1.5/2.5 goals, BTTS and real-time global livescores. Powered by the Beacon Force Algorithm.">
+    <meta name="keywords" content="football predictions, soccer predictions today, AI sports betting, sure banker bet, football prediction algorithm, free betting tips today, over 1.5 goals tips, double chance predictions, btts tips, livescore football, norra ai, mynorra">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- JSON-LD SEO Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Norra AI",
+          "url": "https://mynorra.xyz/",
+          "logo": "https://mynorra.xyz/assets/norraai.png",
+          "image": "https://mynorra.xyz/assets/analysis_hero.png",
+          "description": "Near-perfect mathematical football predictions, 1X2, Double Chance, Over/Under goal lines, and BTTS insights powered by the Beacon Force Algorithm.",
+          "applicationCategory": "SportsApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "url": "https://mynorra.xyz/",
+          "name": "Norra AI Football Predictions",
+          "description": "Daily mathematical football forecasts, Banker Accumulators, and In-Play Livescores.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://mynorra.xyz/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <!-- Dedicated PWA Launch Animated Text Splash Screen -->
+    <div id="norra-splashscreen" aria-hidden="true">
+        <div class="norra-splash-content">
+            <div class="norra-splash-icon-wrapper">
+                <img src="assets/norraai.png" alt="Norra AI Core" class="norra-splash-emblem" />
+                <div class="norra-splash-glow-ring"></div>
+            </div>
+            <h1 class="norra-splash-title">
+                <span class="norra-splash-norra">NORRA</span> <span class="norra-splash-ai">AI</span>
+            </h1>
+            <p class="norra-splash-tagline">THE PREDICTION BEACON FORCE</p>
+            <div class="norra-splash-loader-bar">
+                <div class="norra-splash-loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden Screenshot Header -->
-    <div id="screenshot-header" class="screenshot-header hidden">
-        <h2>🚀 NORRA AI DAILY PICKS ⚽</h2>
-        <div id="screenshot-date-label"></div>
+    <div id="screenshot-header" class="screenshot-header hidden" style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 15px; padding: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); border-radius: 12px;">
+        <img src="assets/norraai.png" alt="Norra AI" style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--accent);" />
+        <div style="text-align: left;">
+            <h2 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 1.15rem; color: #00f2ff; letter-spacing: 1px;">NORRA AI DAILY PICKS</h2>
+            <div id="screenshot-date-label" style="font-size: 0.8rem; color: #94a3b8;"></div>
+        </div>
     </div>
 
     <div class="background-blob"></div>
@@ -34,14 +121,35 @@
 
     <nav>
         <div class="logo">
-            <img src="norraai.png" alt="Norra AI Logo" class="brand-logo">
-            NORRA<span>AI</span>
+            <a href="/" title="Norra AI Home" style="display: inline-flex; align-items: center; text-decoration: none; gap: 10px;">
+                <img src="assets/norraai.png" alt="Norra AI Logo" class="brand-logo">
+                <span class="brand-name-desktop">Norra <span style="color: var(--accent);">AI</span></span>
+            </a>
         </div>
         <div class="nav-actions">
-            <button onclick="toggleTheme()" class="theme-toggle-btn">🌓 Theme</button>
-            <button id="btn-pwa-notify" class="theme-toggle-btn" onclick="requestNotificationAccess()" style="display: none; padding: 0.3rem 0.65rem; border-radius: 20px; font-size: 0.65rem; align-items: center; gap: 4px;">🔔 Alerts</button>
-            <button onclick="promptAdminAccess()" class="admin-btn">Admin Only</button>
-            <div class="status-badge"><span class="pulse"></span> Beacon Active</div>
+            <!-- Bet Slip Toggle -->
+            <button id="floating-slip-toggle-nav" class="nav-icon-btn" onclick="toggleBetSlipWidget()" title="View VIP Accumulator Slip">
+                🎟️ <span class="nav-btn-text">Bet Slip</span> <span id="nav-slip-badge" class="floating-slip-badge">0</span>
+            </button>
+            <!-- Chatbot Toggle -->
+            <button class="nav-icon-btn" id="chatbot-toggle-btn" onclick="toggleChat()" title="Norra AI Chat">
+                🤖 <span class="nav-btn-text">AI Chat</span>
+            </button>
+            <!-- Alerts Button (Prominent VIP Push & Game Alerts) -->
+            <button id="btn-pwa-notify" class="nav-icon-btn nav-alerts-btn" onclick="requestNotificationAccess()" title="Enable VIP Match & Banker Alerts">
+                🔔 <span class="nav-btn-text">Alerts</span>
+            </button>
+            <!-- Guide Link -->
+            <a href="how-it-works.html" class="nav-icon-btn" title="How It Works & Quantitative Guide" style="text-decoration: none;">
+                📖 <span class="nav-btn-text">Guide</span>
+            </a>
+            <!-- Install Button (PWA) -->
+            <button id="btn-pwa-install" class="nav-icon-btn" onclick="triggerPWAInstall()" title="Install App">
+                ⬇️ <span class="nav-btn-text">Install</span>
+            </button>
+            <button onclick="toggleTheme()" class="nav-icon-btn" title="Toggle Theme">
+                🌓 <span class="nav-btn-text">Theme</span>
+            </button>
         </div>
     </nav>
 
@@ -50,37 +158,188 @@
         <p>Near-perfect mathematical forecasts for football fans worldwide. Powered by the Beacon Force Algorithm.</p>
     </header>
 
-    <div class="view-toggle-container">
-        <button id="btn-yesterday-predictions" class="toggle-btn" onclick="switchView('yesterday')">📅 Yesterday</button>
-        <button id="btn-active-predictions" class="toggle-btn active" onclick="switchView('active')">📡 Today</button>
-        <button id="btn-live-scores" class="toggle-btn" onclick="switchView('live')">⚽ Livescore</button>
+    <!-- Low-Height Micro Showcase Ticker & Announcement Carousel -->
+    <div class="hero-showcase-wrapper">
+        <div class="hero-showcase-ticker" id="hero-showcase-ticker">
+            <div class="hero-ticker-track" id="hero-ticker-track">
+                <div class="hero-ticker-slide active">
+                    <span class="ticker-pill">🏆 100% WINS</span>
+                    <span class="ticker-text">Verified VIP Daily Banker Slips &mdash; High-Precision Mathematical Double Hits</span>
+                </div>
+                <div class="hero-ticker-slide">
+                    <span class="ticker-pill">⚡ SHIN +EV</span>
+                    <span class="ticker-text">True Zero-Vig Calibration Exploiting Bookmaker Market Inefficiencies</span>
+                </div>
+                <div class="hero-ticker-slide">
+                    <span class="ticker-pill">📱 PWA APP</span>
+                    <span class="ticker-text">Install Norra AI to Home Screen for Real-Time Offline Forecasts</span>
+                </div>
+                <div class="hero-ticker-slide">
+                    <span class="ticker-pill">🛡️ 18+ ONLY</span>
+                    <span class="ticker-text">Strictly Quantitative Analytical Platform &mdash; Play Responsibly</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-ticker-dots">
+            <span class="ticker-dot active" onclick="jumpHeroTicker(0)"></span>
+            <span class="ticker-dot" onclick="jumpHeroTicker(1)"></span>
+            <span class="ticker-dot" onclick="jumpHeroTicker(2)"></span>
+            <span class="ticker-dot" onclick="jumpHeroTicker(3)"></span>
+        </div>
     </div>
 
+    <!-- Header Sponsor & Network Ad Slot -->
+    <div id="header-ad-slot" class="ad-slot-container" style="max-width: 800px; margin: 15px auto;"></div>
+
+    <!-- Dynamic Telemetry & Trust ROI Dashboard -->
+    <section id="accuracy-dashboard" class="transparency-section" style="max-width: 1200px; margin: 0.5rem auto 1.5rem; padding: 0 15px; text-align: center;">
+        <div class="stats-widget telemetry-card">
+            <div class="stats-widget-item">
+                <div id="stats-winrate-7" class="stats-widget-num" style="color: #10b981;">100%</div>
+                <div class="stats-widget-lbl">Daily Banker Wins</div>
+            </div>
+            <div class="stats-widget-item">
+                <div id="stats-yield" class="stats-widget-num" style="color: #00f2ff;">+22.7%</div>
+                <div class="stats-widget-lbl">Algorithm ROI</div>
+            </div>
+            <div class="stats-widget-item">
+                <div id="stats-active-streak" class="stats-widget-num" style="color: #f59e0b;">🔥 7-Day Streak</div>
+                <div class="stats-widget-lbl">Current Streak</div>
+            </div>
+            <div class="stats-widget-item form-pills-item">
+                <div id="stats-recent-form" class="form-pills-container">
+                    <span class="form-pill win" title="Brazil &amp; United States vs Odds @2.25: Won (Oct 13, 2026 VIP Banker)">W</span>
+                    <span class="form-pill win" title="Columbus Crew &amp; FC Cincinnati vs Odds @2.20: Won (Oct 14, 2026 VIP Banker)">W</span>
+                    <span class="form-pill win" title="Internacional de Bogotá &amp; SK Brann vs Odds @2.11: Won (Oct 15, 2026 VIP Banker)">W</span>
+                    <span class="form-pill win" title="Burnley &amp; RC Deportivo La Coruña vs Odds @2.10: Won (Oct 16, 2026 VIP Banker)">W</span>
+                    <span class="form-pill win latest" title="Atlanta United FC &amp; New York City FC vs Odds @2.10: Won (Oct 17, 2026 VIP Banker) (Latest Result)">W</span>
+                </div>
+                <div class="stats-widget-lbl">Recent Form <span style="font-size: 0.65em; opacity: 0.85;">(→ Latest)</span></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="view-toggle-container">
+        <button id="btn-yesterday-predictions" class="toggle-btn" onclick="switchView('yesterday')">📅 Yesterday <span id="count-yesterday" style="opacity: 0.85; font-size: 0.85em;"></span></button>
+        <button id="btn-active-predictions" class="toggle-btn active" onclick="switchView('active')">📡 Today <span id="count-today" style="opacity: 0.85; font-size: 0.85em;"></span></button>
+        <button id="btn-tomorrow-predictions" class="toggle-btn" onclick="switchView('tomorrow')">🔮 Tomorrow <span id="count-tomorrow" style="opacity: 0.85; font-size: 0.85em;"></span></button>
+        <button id="btn-nav-livescores" class="toggle-btn toggle-btn-live" onclick="switchView('live')" title="Open Global In-Play Scoreboard">⚡ Livescore <span id="count-nav-live" class="live-count-badge" style="display: none;"></span></button>
+    </div>
+
+    <!-- Yesterday & Archive Sub-View Tabs -->
     <div id="yesterday-sub-toggle" class="sub-toggle-container hidden">
         <button id="btn-sub-yesterday" class="sub-toggle-btn active" onclick="switchYesterdaySubView('yesterday')">📅 Yesterday's Picks</button>
         <button id="btn-sub-archive" class="sub-toggle-btn" onclick="switchYesterdaySubView('archive')">📜 Older Archive</button>
     </div>
 
+    <!-- Dynamic Archive Period Filter Bar (Months & Years) -->
+    <div id="archive-period-selector" class="archive-period-container hidden">
+        <!-- Injected via JavaScript -->
+    </div>
+
     <div class="filter-container">
-        <div id="league-filters" class="filter-bar">
-            <!-- Dynamic filters injected here -->
+        <!-- Quick Action Bar: Unified Instant Search -->
+        <div class="quick-action-bar">
+            <div class="search-box-wrapper" style="width: 100%;">
+                <input type="text" id="frontend-search-input" placeholder="🔍 Search match, team, or league..." oninput="handleFrontendSearch(this.value)" />
+            </div>
+        </div>
+
+        <!-- Filter Controls Row: League, Market Selector, Confidence Selector & Actions -->
+        <div class="filter-controls-row">
+            <div id="league-filters" class="filter-bar">
+                <!-- Dynamic filters injected here -->
+            </div>
+
+            <div class="dropdown-filter-group">
+                <select id="filter-market" class="theme-select" aria-label="Filter by Market" onchange="filterByMarket(this.value, this)">
+                    <option value="all">🌐 All Markets</option>
+                    <option value="1x2">🏆 Straight Wins (1X2)</option>
+                    <option value="dc">🛡️ Double Chance (1X/X2/12)</option>
+                    <option value="goals">⚽ Goals (Ov/Un)</option>
+                    <option value="btts">🔥 Both Teams to Score (GG)</option>
+                </select>
+
+                <select id="filter-confidence" class="theme-select" aria-label="Filter by Confidence" onchange="applyFilters()">
+                    <option value="all">📊 All Confidences</option>
+                    <option value="steam">📉 Steam Moves (Sharp Money)</option>
+                    <option value="ev">⚡ EV+ Edges</option>
+                    <option value="70">🔥 Top Picks (>70%)</option>
+                    <option value="80">⭐ Safe Picks (>80%)</option>
+                </select>
+            </div>
+
+            <div class="action-buttons-container">
+                <button id="btn-unlock-vip-banker" class="action-btn btn-unlock-vip-banker" onclick="triggerRewardedBankerAd()" title="Watch Ad to Unlock Telegram Sure Banker">
+                    🎁 VIP Banker (In your DM)
+                </button>
+                <button id="btn-share-summary" class="action-btn" onclick="shareDailySummary()" title="Share Daily Picks Sheet">
+                    🔗 Share Picks
+                </button>
+                <button id="btn-screenshot-mode" class="action-btn" onclick="toggleScreenshotMode()" title="Screenshot Mode">
+                    📸 Screenshot
+                </button>
+            </div>
         </div>
     </div>
 
+    <!-- Native Norra AI Global Live Scoreboard Center -->
     <div id="live-scores-container" class="live-scores-container hidden">
-        <div class="widget-header">
-            <h3>📡 Real-Time Global Scoreboard</h3>
-            <p>Live scores, match statistics, and timeline events provided by ScoreBat.</p>
+        <div class="livescore-hub-header">
+            <div class="livescore-hub-title-group">
+                <div class="livescore-hub-badge">
+                    <span class="live-pulsing-dot"></span>
+                    <span class="hub-label">LIVE MATCH CENTER</span>
+                </div>
+                <h3>Global In-Play Scoreboard</h3>
+                <p>Real-time match scores, play-by-play timelines, statistics, and live prediction telemetry. Kickoff times aligned to <strong>GMT+1 (WAT)</strong>.</p>
+            </div>
+            <div class="livescore-hub-actions">
+                <button id="btn-livescore-tz" class="livescore-tz-btn" onclick="toggleLivescoreTimezone()" title="Click to toggle kickoff timezone between platform GMT+1 (WAT) and device local time">
+                    <span>🕒 Time: <strong>GMT+1</strong></span>
+                </button>
+                <button class="livescore-back-btn" onclick="switchView('active')" title="Back to Predictions">
+                    <span>📡 Back to Predictions</span>
+                </button>
+                <button class="livescore-refresh-btn" onclick="fetchLiveScores(true)" title="Refresh Scores">
+                    <span id="livescore-refresh-icon">🔄</span> <span class="refresh-text">Refresh</span>
+                </button>
+            </div>
         </div>
-        <div class="iframe-wrapper">
-            <iframe src="https://www.scorebat.com/embed/livescore/" title="ScoreBat Livescore Widget" allowfullscreen allow="autoplay; fullscreen" class="livescore-iframe _scorebatEmbeddedWidget_"></iframe>
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = 'https://www.scorebat.com/embed/embed.js';
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'scorebat-jssdk'));</script>
+
+        <!-- Live Sub-View Tabs & Filters -->
+        <div class="livescore-controls-bar">
+            <div class="livescore-tabs-group">
+                <button id="btn-live-tab-inplay" class="livescore-tab-btn active" onclick="switchLiveTab('live')">
+                    <span class="live-pill-dot"></span> Live Now <span id="count-livescore-live">(0)</span>
+                </button>
+                <button id="btn-live-tab-all" class="livescore-tab-btn" onclick="switchLiveTab('all')">
+                    🌐 Today <span id="count-livescore-all">(0)</span>
+                </button>
+                <button id="btn-live-tab-finished" class="livescore-tab-btn" onclick="switchLiveTab('finished')">
+                    ✅ Finished <span id="count-livescore-finished">(0)</span>
+                </button>
+                <button id="btn-live-tab-upcoming" class="livescore-tab-btn" onclick="switchLiveTab('upcoming')">
+                    ⏳ Upcoming <span id="count-livescore-upcoming">(0)</span>
+                </button>
+            </div>
+
+            <div class="livescore-filter-inputs">
+                <div class="livescore-search-box">
+                    <input type="text" id="livescore-search-input" placeholder="🔍 Search match, team or league..." oninput="handleLiveSearch(this.value)">
+                </div>
+                <select id="livescore-league-select" class="livescore-select" onchange="filterLiveByLeague(this.value)">
+                    <option value="all">🏆 All Competitions</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Live Matches Feed Grid -->
+        <div id="livescore-matches-grid" class="livescore-matches-grid">
+            <div class="livescore-loading-state">
+                <div class="livescore-spinner"></div>
+                <span>Connecting to live match feed...</span>
+            </div>
         </div>
     </div>
 
@@ -106,34 +365,48 @@
         </div>
     </div>
 
-    <!-- Search Bar -->
-    <div id="search-container" class="search-container">
-        <input type="text" id="search-input" class="search-input" placeholder="🔍 Search by team, league, or country...">
+    <!-- Automated Daily AI Banker Ticket Container (Positioned above match cards, Collapsed by default) -->
+    <section id="daily-banker-ticket-container" class="daily-banker-section" style="max-width: 1200px; margin: 0.8rem auto 1.2rem; padding: 0 15px; display: none;">
+        <!-- Injected via JavaScript dynamically -->
+    </section>
+
+    <!-- Dedicated Multi-Bookmaker Sports Booking Codes Container (Left-Side Widget on Desktop, Collapsed in-stream on Mobile) -->
+    <section id="sports-booking-codes-container" class="sports-booking-section" style="display: none;">
+        <!-- Injected via JavaScript dynamically -->
+    </section>
+
+    <!-- Dedicated In-Play Livescores Quick Launcher Bar (Directly above prediction cards) -->
+    <div id="livescore-launcher-container" class="livescore-launcher-container">
+        <button id="btn-live-scores" class="livescore-launcher-btn" onclick="switchView('live')" title="Open In-Play Live Match Telemetry">
+            <span class="live-pulsing-dot-small"></span> <span class="bouncing-ball-icon">⚽</span> In-Play Livescores &amp; Match Center
+        </button>
     </div>
 
-    <!-- Advanced Filter Control Panel -->
-    <div id="filters-panel" class="filters-panel" style="display: flex; gap: 12px; justify-content: center; margin: -0.5rem auto 1.5rem; max-width: 600px; padding: 0 10px; flex-wrap: wrap;">
-        <select id="filter-confidence" aria-label="Filter by Confidence" onchange="applyFilters()" style="flex: 1; min-width: 140px; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-family: 'Orbitron', sans-serif; cursor: pointer; outline: none; transition: border-color 0.2s;">
-            <option value="all">All Confidences</option>
-            <option value="70">🔥 Top Picks (>70%)</option>
-            <option value="80">⭐ Safe Picks (>80%)</option>
-        </select>
-        <select id="filter-market" aria-label="Filter by Market" onchange="applyFilters()" style="flex: 1; min-width: 140px; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-family: 'Orbitron', sans-serif; cursor: pointer; outline: none; transition: border-color 0.2s;">
-            <option value="all">All Markets</option>
-            <option value="winner">Winner / Double Chance</option>
-            <option value="goals">Goal Lines (O/U)</option>
-            <option value="btts">Both Teams to Score</option>
-        </select>
+    <!-- Today Sub-View Tabs: All vs Upcoming vs Finished (Positioned directly above cards) -->
+    <div id="today-sub-toggle" class="sub-toggle-container">
+        <button id="btn-sub-today-upcoming" class="sub-toggle-btn active" onclick="switchTodaySubView('upcoming')">⏳ Upcoming <span id="count-today-upcoming">(0)</span></button>
+        <button id="btn-sub-today-finished" class="sub-toggle-btn" onclick="switchTodaySubView('finished')">✅ Finished <span id="count-today-finished">(0)</span></button>
+        <button id="btn-sub-today-all" class="sub-toggle-btn" onclick="switchTodaySubView('all')">🌐 All <span id="count-today-all">(0)</span></button>
     </div>
 
-    <!-- Action buttons for sharing daily summary & screenshotting -->
-    <div class="action-buttons-container" style="display: flex; gap: 10px; max-width: 1200px; margin: 10px auto; padding: 0 20px; justify-content: flex-end;">
-        <button id="btn-share-summary" class="action-btn" onclick="shareDailySummary()" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); color: #38bdf8; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 600; font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 6px;">
-            🔗 Share Daily Picks Sheet
-        </button>
-        <button id="btn-screenshot-mode" class="action-btn" onclick="toggleScreenshotMode()" style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); color: #a855f7; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 600; font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 6px;">
-            📸 Screenshot Mode
-        </button>
+    <!-- Concluded / Past Games Performance Summary Banner (Positioned directly above cards in Finished view) -->
+    <div id="concluded-games-summary" class="concluded-summary-banner hidden">
+        <div class="summary-metric">
+            <span class="summary-label">Total Concluded:</span>
+            <span id="summary-total-concluded" class="summary-value">0</span>
+        </div>
+        <div class="summary-metric metric-won">
+            <span class="summary-label">✅ Won:</span>
+            <span id="summary-won-concluded" class="summary-value">0</span>
+        </div>
+        <div class="summary-metric metric-lost">
+            <span class="summary-label">❌ Lost:</span>
+            <span id="summary-lost-concluded" class="summary-value">0</span>
+        </div>
+        <div class="summary-metric metric-rate">
+            <span class="summary-label">🎯 Win Rate:</span>
+            <span id="summary-winrate-concluded" class="summary-value">0%</span>
+        </div>
     </div>
 
     <main id="prediction-grid">
@@ -147,30 +420,98 @@
 
     <div id="pagination-container" class="pagination-container"></div>
 
-    <!-- Dynamic Accuracy & Resolution Dashboard -->
-    <section id="accuracy-dashboard" class="transparency-section" style="max-width: 1200px; margin: 3rem auto; padding: 0 20px; text-align: center; display: none;">
-        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--accent); margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 10px var(--accent-glow);">📊 Dynamic Accuracy & Resolution Dashboard</h3>
-        <div class="stats-widget">
-            <div class="stats-widget-item" style="border-right: 1px solid var(--glass-border);">
-                <div id="stats-winrate-30" class="stats-widget-num" style="color: #10b981;">-</div>
-                <div class="stats-widget-lbl">All-Time Accuracy</div>
+    <!-- Daily Banker Wins Showcase (Consecutive Won Banker Tickets - Collapsed Proof for Streak Widget) -->
+    <section id="daily-banker-wins-section" class="daily-banker-wins-section collapsed" style="max-width: 960px; margin: 20px auto 15px;">
+        <div class="daily-banker-wins-header">
+            <div class="daily-banker-wins-title-wrap">
+                <span class="banker-trophy-icon">🏆</span>
+                <div>
+                    <h3 class="daily-banker-wins-title">Daily Banker Wins &amp; Verified Slips</h3>
+                    <p class="daily-banker-wins-subtitle">Consecutive winning VIP banker tickets &mdash; verified full-time algorithmic hits</p>
+                </div>
             </div>
-            <div class="stats-widget-item" style="border-right: 1px solid var(--glass-border);">
-                <div id="stats-winrate-7" class="stats-widget-num" style="color: #10b981;">-</div>
-                <div class="stats-widget-lbl">Last 7 Days Win Rate</div>
+            <div class="daily-banker-wins-meta">
+                <span class="banker-streak-badge" id="banker-wins-streak-badge">⚡ 100% Verified Hits</span>
+                <button type="button" class="banker-toggle-btn" id="banker-wins-toggle-btn" onclick="toggleDailyBankerWins(event)" aria-label="Toggle Verified Banker Wins" title="Expand / Collapse Verified Slips">
+                    <span class="banker-toggle-arrow" id="banker-wins-toggle-arrow">▼</span>
+                </button>
             </div>
-            <div class="stats-widget-item" style="border-right: 1px solid var(--glass-border);">
-                <div id="stats-resolved-count" class="stats-widget-num">-</div>
-                <div class="stats-widget-lbl">Resolved Picks</div>
+        </div>
+        <div id="daily-banker-wins-collapsible" class="daily-banker-wins-collapsible" style="display: none;">
+            <div id="daily-banker-wins-container" class="daily-banker-wins-grid">
+                <!-- Populated dynamically by renderDailyBankerWins() -->
             </div>
-            <div class="stats-widget-item">
-                <div id="stats-yield" class="stats-widget-num" style="color: #00f2ff;">-</div>
-                <div class="stats-widget-lbl">Estimated Yield (ROI)</div>
-            </div>
+            <div id="daily-banker-wins-pagination" class="banker-wins-pagination"></div>
         </div>
     </section>
 
-    <!-- Cookie Notice Banner -->
+    <!-- Betting Notation Key & Legend (Interactive Collapsible Guide) Moved Below Predictions -->
+    <div id="betting-key-legend" class="betting-key-card collapsed" style="max-width: 960px; margin: 15px auto;">
+        <div class="betting-key-header" onclick="toggleBettingKeyLegend()" title="Click to expand/collapse betting notation definitions">
+            <div class="betting-key-title-wrap">
+                <span class="key-icon">💡</span>
+                <span class="key-title">Betting Notation Key &amp; Legend</span>
+                <span class="key-subtitle">(1X, X2, 12, H+1.5, GG, Ov1.5...)</span>
+            </div>
+            <span class="key-toggle-arrow" id="key-toggle-arrow">▼</span>
+        </div>
+        <div class="betting-key-body" id="betting-key-body">
+            <div class="key-grid">
+                <div class="key-chip"><span class="k-code">1</span> <span class="k-desc">Home Win</span></div>
+                <div class="key-chip"><span class="k-code">X</span> <span class="k-desc">Draw</span></div>
+                <div class="key-chip"><span class="k-code">2</span> <span class="k-desc">Away Win</span></div>
+                <div class="key-chip"><span class="k-code">1X</span> <span class="k-desc">Home or Draw</span></div>
+                <div class="key-chip"><span class="k-code">X2</span> <span class="k-desc">Draw or Away</span></div>
+                <div class="key-chip"><span class="k-code">12</span> <span class="k-desc">Either Team Wins</span></div>
+                <div class="key-chip"><span class="k-code">Ov1.5</span> <span class="k-desc">Over 1.5 Goals (2+)</span></div>
+                <div class="key-chip"><span class="k-code">Ov2.5</span> <span class="k-desc">Over 2.5 Goals (3+)</span></div>
+                <div class="key-chip"><span class="k-code">Un2.5</span> <span class="k-desc">Under 2.5 Goals (≤2)</span></div>
+                <div class="key-chip"><span class="k-code">Un3.5</span> <span class="k-desc">Under 3.5 Goals (≤3)</span></div>
+                <div class="key-chip"><span class="k-code">GG</span> <span class="k-desc">Both Teams to Score</span></div>
+                <div class="key-chip"><span class="k-code">NG</span> <span class="k-desc">Clean Sheet / One Team</span></div>
+                <div class="key-chip"><span class="k-code">H+1.5</span> <span class="k-desc">Home +1.5 Asian Handicap</span></div>
+                <div class="key-chip"><span class="k-code">A+1.5</span> <span class="k-desc">Away +1.5 Asian Handicap</span></div>
+                <div class="key-chip"><span class="k-code">Cor8.5</span> <span class="k-desc">Over 8.5 Corners</span></div>
+                <div class="key-chip" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4);"><span class="k-code" style="color: #10b981;">⚡ +EV</span> <span class="k-desc">Positive Expected Value</span></div>
+                <div class="key-chip" style="background: rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.4);"><span class="k-code" style="color: #06b6d4;">📉 Steam</span> <span class="k-desc">Sharp Market Drop</span></div>
+                <div class="key-chip" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4);"><span class="k-code" style="color: #f59e0b;">🎯 Kelly</span> <span class="k-desc">Quarter-Kelly Staking</span></div>
+                <div class="key-chip" style="background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.4);"><span class="k-code" style="color: #fbbf24;">⭐ VIP</span> <span class="k-desc">Golden Double Ticket</span></div>
+            </div>
+            <div style="margin-top: 15px; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 12px;">
+                <a href="how-it-works.html" style="color: var(--accent); text-decoration: none; font-size: 0.84rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                    📖 View Complete Visual Guide, Card Anatomy &amp; Quantitative Engine Playbook &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content & Partner Ad Slot above About Section -->
+    <div id="about-ad-slot" class="ad-slot-container" style="max-width: 800px; margin: 15px auto;"></div>
+
+    <!-- Footer Sponsor & Network Ad Container (Positioned above How Norra Works) -->
+    <div id="footer-ad-slot" class="ad-slot-container" style="max-width: 800px; margin: 15px auto 25px;"></div>
+
+    <!-- Rich Algorithmic Intelligence & Model Overview (SEO & Network Audit Friendly) -->
+    <section class="seo-feature-section">
+        <h2 class="seo-feature-heading">About the Beacon Force Algorithmic Engine</h2>
+        <p class="seo-feature-desc">
+            Norra AI deploys machine learning ensembles, combining Random Forest classifiers, Poisson goal-distribution models, and squad market valuation ratios, to synthesize match probabilities across 40+ global leagues. By processing historical head-to-head metrics, expected goals (xG), recent form, and home/away defensive differentials, our algorithms calculate near-perfect statistical edges for football enthusiasts worldwide.
+        </p>
+        <div class="seo-feature-grid">
+            <div class="seo-feature-card">
+                <strong class="seo-card-title market-title">⚡ Multi-Market Synthesis</strong>
+                <span>Calculates 1X2 match outcomes, Double Chance (1X/X2), Over/Under 1.5/2.5/3.5 Goals, and Both Teams to Score (GG/NG) probabilities with calibrated confidence.</span>
+            </div>
+            <div class="seo-feature-card">
+                <strong class="seo-card-title retraining-title">📊 Continuous Model Retraining</strong>
+                <span>Completed match results are automatically verified against real-time scoreboards to recalibrate feature weights and maintain high prediction precision.</span>
+            </div>
+            <div class="seo-feature-card">
+                <strong class="seo-card-title mismatch-title">🛡️ Anti-Mismatch Filter</strong>
+                <span>Incorporates division tiers, cup differentials, and squad depth valuations to eliminate underdog traps across domestic cup and league competitions.</span>
+            </div>
+        </div>
+    </section>
     <div id="cookie-banner" class="cookie-banner">
         <span>🍪 Norra AI uses cookies to optimize your performance and analytical tracking. By using our site, you agree to our Terms.</span>
         <button onclick="acceptCookies()" class="cookie-btn">Accept</button>
@@ -195,11 +536,8 @@
         </div>
     </div>
 
-    <!-- Floating Chatbot UI -->
+    <!-- Floating Chatbot Modal (Trigger moved to Header) -->
     <div class="chat-widget" id="chat-widget">
-        <div class="chat-icon" onclick="toggleChat()">
-            💬
-        </div>
         <div class="chat-window" id="chat-window">
             <div class="chat-header">
                 <span>🤖 Norra AI Assistant</span>
@@ -223,14 +561,61 @@
         </div>
     </section>
 
-    <!-- How it Works & Disclaimers -->
-    <section class="info-section" style="max-width: 800px; margin: 4rem auto; padding: 0 20px; text-align: center; font-family: 'Inter', sans-serif; line-height: 1.7;">
-        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-glow);">📡 How Beacon Force V4 Works</h3>
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 1.5rem; text-align: justify;">
-            Norra AI leverages five dedicated Machine Learning classifiers trained on historical league standings, average goals, and head-to-head metrics. The <strong>Beacon Force V4 Algorithm</strong> weights team momentum, defensive stress, and home field advantage to forecast match outcomes. For volatile leagues (such as Swedish, Norwegian, or Chinese divisions), the engine automatically pivots to highly stable goal lines and BTTS selections to ensure consistent predictability.
-        </p>
-        <div style="font-size: 0.72rem; opacity: 0.6; font-style: italic; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
-            Disclaimer: All predictions are mathematically calculated estimations for entertainment and educational purposes only. Sports betting carries financial risk. Norra AI accepts no liability for losses. Play responsibly (18+).
+    <!-- How it Works & Deep Analytical Architecture -->
+    <section class="info-section" style="max-width: 1000px; margin: 3.5rem auto; padding: 0 20px; font-family: 'Inter', sans-serif; line-height: 1.7;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.25rem; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 12px var(--accent-glow);">📡 How Norra AI Works</h3>
+            <p style="font-size: 0.88rem; opacity: 0.8; max-width: 700px; margin: 0 auto;">
+                Norra AI powers high-precision football forecasting through a Quantum soft-voting ML ensemble, dynamic Poisson xG distributions, youth academy cup safety shields, and real-time multi-bookmaker booking synchronization.
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div style="background: var(--glass); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">🧬</div>
+                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 6px;">Quantum ML Ensemble</h4>
+                <p style="font-size: 0.78rem; opacity: 0.75; line-height: 1.5; margin: 0;">
+                    Multi-model soft-voting ensemble engineered with dynamic Poisson expected goals (xG) calibration and probability distribution smoothing to eliminate variance, minimize bias, and prevent overfitting.
+                </p>
+            </div>
+
+            <div style="background: var(--glass); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">🛡️</div>
+                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 6px;">U21 Academy & Draw Shield</h4>
+                <p style="font-size: 0.78rem; opacity: 0.75; line-height: 1.5; margin: 0;">
+                    Identifies youth development squads playing senior men's clubs in cup ties (e.g. EFL Trophy), barring straight wins on youth visitors and enforcing Double Chance (1X) on senior hosts or Over 1.5 Goals.
+                </p>
+            </div>
+
+            <div style="background: var(--glass); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">📊</div>
+                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 6px;">Multi-Source Data Fabric</h4>
+                <p style="font-size: 0.78rem; opacity: 0.75; line-height: 1.5; margin: 0;">
+                    Aggregates real-time feeds across high-end global sports telemetry providers, official match registries, and squad depth metrics with sub-second score resolution and automated outcome reconciliation.
+                </p>
+            </div>
+
+            <div style="background: var(--glass); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">🎟️</div>
+                <h4 style="font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--text-bright); margin-bottom: 6px;">1-Click Bookings & Live Streak</h4>
+                <p style="font-size: 0.78rem; opacity: 0.75; line-height: 1.5; margin: 0;">
+                    Generates authentic 1-click booking codes across SportyBet, Bet9ja, MSport, and Football.com from today's active bankers, instantly recalculating verified win streak telemetry as matches conclude.
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem; margin-bottom: 1.5rem;">
+            <a href="how-it-works.html" style="display: inline-flex; align-items: center; gap: 8px; background: var(--glass); border: 1px solid var(--accent); color: var(--accent); padding: 10px 22px; border-radius: 10px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 15px var(--accent-glow);">
+                📖 Explore Full Card Anatomy &amp; Quantitative Playbook &rarr;
+            </a>
+        </div>
+
+        <div class="footer-disclaimer-wrapper">
+            <span class="disclaimer-badge">
+                <span class="footer-moonwalk-slant" aria-hidden="true"></span>
+                <span class="disclaimer-badge-text">Disclaimer:</span>
+            </span>
+            <span class="disclaimer-body-text">All predictions are mathematically calculated estimations for entertainment, simulation, and analytical modeling purposes only. Sports betting carries financial risk. Norra AI accepts no liability for losses. Play responsibly (18+).</span>
         </div>
     </section>
 
@@ -244,14 +629,19 @@
             <p>Add to Home Screen for fast offline access & VIP alerts</p>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button id="btn-pwa-install" class="pwa-install-btn">Install</button>
+            <button id="btn-pwa-install-banner" class="pwa-install-btn" onclick="triggerPWAInstall()">Install</button>
             <button id="btn-pwa-close" class="pwa-close-btn">&times;</button>
         </div>
     </div>
 
+    <!-- Floating Bet Slip Toggle Button (Moved to Header, Old element hidden/removed) -->
+    <button id="floating-slip-toggle" class="floating-slip-toggle hidden" style="display: none;">
+        🎟️ <span id="floating-slip-badge" class="floating-slip-badge">0</span>
+    </button>
+
     <!-- Accumulator Bet Slip Floating Bar & Modal Widget -->
     <div id="bet-slip-widget" class="bet-slip-widget hidden">
-        <div class="bet-slip-header" onclick="toggleBetSlip()">
+        <div class="bet-slip-header" onclick="toggleBetSlip(event)">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="slip-icon">🎟️</span>
                 <span class="slip-title">Beacon Slip (<span id="slip-count">0</span>)</span>
@@ -259,54 +649,118 @@
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span id="slip-total-odds" class="slip-total-odds">@ 1.00</span>
                 <span id="slip-arrow" class="slip-toggle-arrow">▲</span>
+                <span id="slip-close" class="slip-close-btn" onclick="closeBetSlipWidget(event)" style="font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</span>
             </div>
         </div>
         <div id="bet-slip-body" class="bet-slip-body hidden">
             <div class="preset-buttons-row">
-                <button class="preset-btn" onclick="applyPreset('safe_double')">⚡ Safe Double</button>
-                <button class="preset-btn" onclick="applyPreset('banker_treble')">🚀 Banker Treble</button>
+                <button class="preset-btn" onclick="applyPreset('golden_double')" title="VIP 2-Game Golden Double (2.00-2.50 odds)">⭐ Golden Double</button>
+                <button class="preset-btn" onclick="applyPreset('safe_accumulator')" title="High-Value 4-Game Safe Cover (5.00-8.50 odds)">🚀 Safe Acca</button>
+                <button class="preset-btn" onclick="applyPreset('goals_express')" title="3-Game Over/Under & GG Express (3.50-5.50 odds)">🔥 Goals Express</button>
                 <button class="preset-btn clear-btn" onclick="clearBetSlip()">🗑️ Clear</button>
             </div>
+            
             <div id="slip-items-list" class="slip-items-list">
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Click selections on match cards to build your accumulator slip.</p>
             </div>
-            <div class="stake-sim-container">
-                <label for="stake-input" style="font-size: 0.75rem; color: var(--text-muted);">Simulated Stake ($):</label>
-                <input type="number" id="stake-input" name="stake" value="10" min="1" placeholder="10" title="Simulated Stake" aria-label="Simulated Stake ($)" oninput="calculatePayout()" style="width: 70px; padding: 4px 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: var(--text); border-radius: 6px; text-align: center;" />
-                <div style="margin-left: auto; text-align: right;">
-                    <div style="font-size: 0.7rem; color: var(--text-muted);">Est. Payout:</div>
-                    <div id="payout-amount" style="font-size: 0.95rem; font-weight: bold; color: var(--accent);">$10.00</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
+                <button id="generate-slip-code-btn" class="share-slip-btn" onclick="bookCurrentBetSlip(this)" style="width: 100%; background: linear-gradient(135deg, #e11b22 0%, #ea580c 100%); color: #fff; font-weight: bold; padding: 10px; font-size: 0.9rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(225,27,34,0.3);">🎟️ Generate Booking Code</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="share-slip-btn" onclick="copyBetSlipForShare()" style="flex: 1;">📋 Copy Ticket</button>
+                    <button id="screenshot-slip-btn" class="share-slip-btn" onclick="downloadBetSlipImage()" style="flex: 1; background: linear-gradient(135deg, #00f2ff 0%, #0077ff 100%); color: #000; font-weight: bold;">📸 Save Slip (Image)</button>
                 </div>
             </div>
-            <button class="share-slip-btn" onclick="copyBetSlipForShare()">📋 Copy Slip Text for Share</button>
+
+            <!-- Custom Slip Booking Codes Live Result Area -->
+            <div id="slip-booking-codes-result" class="slip-codes-result-area" style="display: none; margin-top: 12px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(0, 242, 255, 0.4); border-radius: 10px; padding: 12px;">
+                <!-- Injected via JavaScript dynamically -->
+            </div>
+
         </div>
     </div>
 
+    <!-- Interactive Match Details Drawer (Timeline, In-Play Stats, Lineups) -->
+    <div id="match-drawer-overlay" class="match-drawer-overlay hidden" onclick="closeMatchDrawer()">
+        <div id="match-drawer-panel" class="match-drawer-panel" onclick="event.stopPropagation()">
+            <div class="drawer-header">
+                <div class="drawer-header-match" id="drawer-header-match">
+                    <!-- Populated dynamically -->
+                </div>
+                <button class="drawer-close-btn" onclick="closeMatchDrawer()" title="Close Match Details">&times;</button>
+            </div>
+            
+            <div class="drawer-tabs">
+                <button id="drawer-tab-timeline-btn" class="drawer-tab-btn active" onclick="switchDrawerTab('timeline')">⏱️ Timeline</button>
+                <button id="drawer-tab-stats-btn" class="drawer-tab-btn" onclick="switchDrawerTab('stats')">📊 Match Stats</button>
+                <button id="drawer-tab-lineups-btn" class="drawer-tab-btn" onclick="switchDrawerTab('lineups')">👥 Lineups</button>
+            </div>
+
+            <div class="drawer-body" id="drawer-body-content">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative Theme-Aware Wavy SVG Divider -->
+    <div class="footer-wave-container" aria-hidden="true">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path class="footer-wave-back" d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,50 L1200,120 L0,120 Z"></path>
+            <path class="footer-wave-front" d="M0,40 C180,110 380,20 600,70 C820,120 1020,30 1200,65 L1200,120 L0,120 Z"></path>
+        </svg>
+    </div>
+
     <footer>
-        <p class="gamble-warning">🔞 18+ | Play Responsibly | <a href="https://www.begambleaware.org" target="_blank" rel="noopener">BeGambleAware.org</a></p>
-        <p>&copy; <span id="current-year"></span> Norra AI Ecosystem. All rights mathematical.</p>
-        <p style="margin-top: 5px; font-size: 0.8rem; opacity: 0.85;">
-            <a href="terms.html" target="_blank" style="color: var(--text); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2);">Terms of Service</a> 
-            <span style="margin: 0 8px; opacity: 0.5;">|</span> 
-            <a href="privacy.html" target="_blank" style="color: var(--text); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2);">Privacy Policy</a>
-        </p>
-        <div class="footer-socials" style="display: flex; justify-content: center; gap: 16px; margin-top: 12px;">
-            <a href="https://x.com/norra_ai" target="_blank" rel="noopener" title="Follow on X" class="social-icon-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        <div class="responsible-gambling-badges">
+            <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" title="BeGambleAware.org - Free confidential gambling help">
+                <img src="assets/begambleaware.svg" alt="BeGambleAware.org" class="rg-badge" />
             </a>
-            <a href="https://www.tiktok.com/@norra_ai" target="_blank" rel="noopener" title="TikTok" class="social-icon-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525 2.25c.038.567.143 1.13.312 1.674a6.52 6.52 0 0 0 4.103 4.103c.544.17 1.107.274 1.674.312V11.5a9.7 9.7 0 0 1-5.777-1.895v6.527a6.626 6.626 0 1 1-6.626-6.626c.35 0 .696.028 1.037.084V12.9a3.376 3.376 0 1 0 2.214 3.197V2.25h3.063z"/></svg>
+            <a href="https://www.gamstop.co.uk" target="_blank" rel="noopener noreferrer" title="GamStop - Free Online Gambling Self-Exclusion">
+                <img src="assets/gamstop-logo-white.webp" alt="GamStop" class="rg-badge" />
             </a>
-            <a href="https://www.instagram.com/norra_ai" target="_blank" rel="noopener" title="Instagram" class="social-icon-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            <a href="https://www.taketimetothink.co.uk" target="_blank" rel="noopener noreferrer" title="Take Time To Think - Stay in Control">
+                <img src="assets/tttt-logo.svg" alt="Take Time To Think" class="rg-badge" />
             </a>
         </div>
+        <p class="gamble-warning">
+            <img src="assets/18-plus.svg" alt="18+" class="rg-inline-18" /> Play Responsibly
+        </p>
+        <div class="footer-links-container">
+            <div class="footer-links-group">
+                <div class="footer-links-row">
+                    <a href="how-it-works.html" class="footer-nav-link">
+                        <span class="footer-moonwalk-slant" aria-hidden="true"></span>
+                        <span>How It Works</span>
+                    </a>
+                    <a href="terms.html" class="footer-nav-link">
+                        <span class="footer-moonwalk-slant" aria-hidden="true"></span>
+                        <span>Terms of Service</span>
+                    </a>
+                </div>
+                <div class="footer-secondary-link-row">
+                    <a href="privacy.html" class="footer-nav-link">
+                        <span class="footer-moonwalk-slant" aria-hidden="true"></span>
+                        <span>Privacy Policy</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-email-row">
+                <a href="mailto:predict@mynorra.xyz" class="footer-email-chip" title="Contact Norra AI Support">
+                    <svg class="footer-mail-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                    <span>predict@mynorra.xyz</span>
+                </a>
+            </div>
+        </div>
+        <p class="footer-copyright">&copy; <span id="current-year"></span> Norra AI. All rights mathematical.</p>
+        <div class="footer-socials" id="footer-socials-container" style="display: flex; justify-content: center; gap: 16px; margin-top: 12px;"></div>
         <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.8;">
             Made with ❤ by <a href="https://github.com/mikaelkraft" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none; font-weight: 600;">Mikael Kraft</a>
+        </p>
+        <p style="margin-top: 6px; text-align: center;">
+            <a href="#" onclick="promptAdminAccess(); return false;" class="footer-admin-link" title="Admin Portal" style="font-size: 1.05rem; text-decoration: none; opacity: 0.55; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.55">🔑</a>
         </p>
     </footer>
 
 
-    <script src="app.js"></script>
+    <script src="app.js?v=3.2.13"></script>
 </body>
 </html>

@@ -1,0 +1,26 @@
+# robots.txt for https://mynorra.xyz
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Google AdSense Crawler
+User-agent: Mediapartners-Google
+Allow: /
+
+# Google Search Crawler
+User-agent: Googlebot
+Allow: /
+
+# Bing Search Crawler
+User-agent: Bingbot
+Allow: /
+
+# Apple Search Crawler
+User-agent: Applebot
+Allow: /
+
+# Sitemap & AI Metadata Index
+Sitemap: https://mynorra.xyz/sitemap.xml
+# LLMs.txt for AI Search & Web Agents
+# https://mynorra.xyz/llms.txt
